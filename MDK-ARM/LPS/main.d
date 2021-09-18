@@ -44,3 +44,6 @@
 .\lps\main.o: ..\LoRa\Inc\ranging.h
 .\lps\main.o: ..\LoRa\Inc\sx1280-hal.h
 .\lps\main.o: ..\LoRa\Inc\sx1280.h
+.\lps\main.o: ../Core/Inc/SEGGER_RTT.h
+.\lps\main.o: ../Core/Inc/../Config/SEGGER_RTT_Conf.h
+.\lps\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h

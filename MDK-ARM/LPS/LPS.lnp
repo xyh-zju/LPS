@@ -6,6 +6,8 @@
 ".\lps\usart.o"
 ".\lps\stm32l4xx_it.o"
 ".\lps\stm32l4xx_hal_msp.o"
+".\lps\segger_rtt.o"
+".\lps\segger_rtt_printf.o"
 ".\lps\stm32l4xx_hal_spi.o"
 ".\lps\stm32l4xx_hal_spi_ex.o"
 ".\lps\stm32l4xx_hal.o"

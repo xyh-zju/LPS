@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "ranging.h"
+#include "SEGGER_RTT.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -35,7 +36,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define LORANGE_ENTITY SLAVE
+#define LORANGE_ENTITY MASTER
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -46,7 +47,11 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-  double distance;
+double distance;
+char RTT_UpBuffer[4096];
+struct{
+  int distance;
+}RTT_Value;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -100,6 +105,7 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   MX_USART2_UART_Init();
+  SEGGER_RTT_ConfigUpBuffer(1,"JScope_I4",&RTT_UpBuffer[0],sizeof(RTT_UpBuffer),SEGGER_RTT_MODE_BLOCK_IF_FIFO_FULL);
   /* USER CODE BEGIN 2 */
   printf("LoRange| Bulid:%s\n",__DATE__);
   RangingSetParams();
@@ -122,7 +128,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
+    
     if(HAL_GPIO_ReadPin(SX1280_DIO1_GPIO_Port,SX1280_DIO1_Pin) == 1)
     {
       if(LORANGE_ENTITY)
@@ -133,6 +139,8 @@ int main(void)
       {
         distance = SX1280GetRangingResult(SX1280_RANGING_RESULT_RAW);
         printf("distance is : %.2lfm\n",distance);
+        RTT_Value.distance = distance * 10;
+        SEGGER_RTT_Write(1,&RTT_Value,sizeof(RTT_Value));
         //HAL_Delay(500);
         RangingStart(SX1280_RADIO_RANGING_ROLE_MASTER);
       }
