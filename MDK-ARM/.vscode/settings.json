@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "usart.h": "c",
+        "sx1280-hal.h": "c",
+        "sx1280.h": "c",
+        "ranging.h": "c",
+        "main.h": "c",
+        "spi.h": "c",
+        "rangingcorrection.h": "c",
+        "stdbool.h": "c"
+    }
+}
