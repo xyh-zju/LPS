@@ -72,7 +72,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     SX1280GetPacketStatus(pktStatus);
     printf("EXTI, RSSI=%f, IRQ=%d, RSSI2=%d\n",((double)(-((int8_t)SX1280GetRssiInst())))/2,SX1280GetIrqStatus(),pktStatus->Params.LoRa.RssiPkt);
     RangingDoneFlag = 1;
-    //SX1280ClearIrqStatus(0xffff);
+    SX1280ClearIrqStatus(0xffff);
   }
 }
 /* USER CODE END 0 */
@@ -144,7 +144,7 @@ int main(void)
         printf("distance is : %.2lfm\n",distance);
         RTT_Value.distance = distance * 10;
         SEGGER_RTT_Write(1,&RTT_Value,sizeof(RTT_Value));
-        //HAL_Delay(500);
+        HAL_Delay(10);
         RangingStart(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
       }
       RangingDoneFlag = 0;
