@@ -27,6 +27,7 @@
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash_ramfunc.h
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_i2c.h
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_i2c_ex.h
+.\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_lptim.h
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr.h
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi.h
@@ -41,6 +42,7 @@
 .\lps\main.o: ../Core/Inc/main.h
 .\lps\main.o: ../Core/Inc/usart.h
 .\lps\main.o: ../Core/Inc/gpio.h
+.\lps\main.o: ../Core/Inc/lptim.h
 .\lps\main.o: ..\LoRa\Inc\ranging.h
 .\lps\main.o: ..\LoRa\Inc\sx1280-hal.h
 .\lps\main.o: ..\LoRa\Inc\sx1280.h

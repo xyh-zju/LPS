@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "lptim.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
@@ -36,7 +37,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define LORANGE_ENTITY MASTER
+#define LORANGE_ENTITY SLAVE
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -107,7 +108,7 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   MX_USART2_UART_Init();
-  SEGGER_RTT_ConfigUpBuffer(1,"JScope_I4",&RTT_UpBuffer[0],sizeof(RTT_UpBuffer),SEGGER_RTT_MODE_BLOCK_IF_FIFO_FULL);
+  MX_LPTIM1_Init();
   /* USER CODE BEGIN 2 */
   printf("LoRange| Bulid:%s\n",__DATE__);
   RangingSetParams();
@@ -123,7 +124,8 @@ int main(void)
     printf("Master\n");
     RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
   }
-  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET);
+  
+  HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xFFFF,0);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -202,8 +204,9 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2|RCC_PERIPHCLK_LPTIM1;
   PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
+  PeriphClkInit.Lptim1ClockSelection = RCC_LPTIM1CLKSOURCE_PCLK;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
