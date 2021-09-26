@@ -36,7 +36,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define LORANGE_ENTITY SLAVE
+#define LORANGE_ENTITY MASTER
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -49,6 +49,7 @@
 /* USER CODE BEGIN PV */
 double distance;
 uint32_t RangingDemoAddress =  0x00010001;
+uint8_t RangingDoneFlag = 0;
 char RTT_UpBuffer[4096];
 struct{
   int distance;
@@ -70,7 +71,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     SX1280_PacketStatus_t *pktStatus;
     SX1280GetPacketStatus(pktStatus);
     printf("EXTI, RSSI=%f, IRQ=%d, RSSI2=%d\n",((double)(-((int8_t)SX1280GetRssiInst())))/2,SX1280GetIrqStatus(),pktStatus->Params.LoRa.RssiPkt);
-    
+    RangingDoneFlag = 1;
     //SX1280ClearIrqStatus(0xffff);
   }
 }
@@ -130,7 +131,8 @@ int main(void)
   while (1)
   {
     
-    if(HAL_GPIO_ReadPin(SX1280_DIO1_GPIO_Port,SX1280_DIO1_Pin) == 1)
+    //if(HAL_GPIO_ReadPin(SX1280_DIO1_GPIO_Port,SX1280_DIO1_Pin) == 1)
+    if(RangingDoneFlag)
     {
       if(LORANGE_ENTITY)
       {
@@ -145,6 +147,7 @@ int main(void)
         //HAL_Delay(500);
         RangingStart(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
       }
+      RangingDoneFlag = 0;
     }
     else
     {
