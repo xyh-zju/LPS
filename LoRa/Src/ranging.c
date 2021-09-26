@@ -71,7 +71,7 @@ void RangingInitRadio( void )
     SX1280SetRfFrequency(RNG_RF_FREQUENCY);
     SX1280SetBufferBaseAddresses(0x00, 0x00);
 }
-void RangingInit(SX1280_RadioRangingRoles_t role)
+void RangingInit(SX1280_RadioRangingRoles_t role, uint32_t address)
 {
     uint16_t calibration;
     RngModulationParams.PacketType = SX1280_PACKET_TYPE_RANGING;
@@ -90,12 +90,12 @@ void RangingInit(SX1280_RadioRangingRoles_t role)
 
     if (role == SX1280_RADIO_RANGING_ROLE_MASTER)
     {
-        SX1280SetRangingRequestAddress(RANGING_DIVICE_ADDR);
+        SX1280SetRangingRequestAddress(address);
         SX1280SetDioIrqParams( RngMasterIrqMask, RngMasterIrqMask, SX1280_IRQ_RADIO_NONE, SX1280_IRQ_RADIO_NONE);
     }
     else
     {
-        SX1280SetDeviceRangingAddress(RANGING_DIVICE_ADDR);
+        SX1280SetDeviceRangingAddress(address);
         SX1280SetDioIrqParams( RngSlaveIrqMask, RngSlaveIrqMask, SX1280_IRQ_RADIO_NONE, SX1280_IRQ_RADIO_NONE);
     }
 
@@ -132,7 +132,7 @@ void RangingInit(SX1280_RadioRangingRoles_t role)
     }
 }
 
-void RangingStart(SX1280_RadioRangingRoles_t role)
+void RangingStart(SX1280_RadioRangingRoles_t role, uint32_t address)
 {
     uint16_t calibration;
     RngModulationParams.PacketType = SX1280_PACKET_TYPE_RANGING;
@@ -148,12 +148,12 @@ void RangingStart(SX1280_RadioRangingRoles_t role)
 
     if (role == SX1280_RADIO_RANGING_ROLE_MASTER)
     {
-        SX1280SetRangingRequestAddress(RANGING_DIVICE_ADDR);
+        SX1280SetRangingRequestAddress(address);
         SX1280SetDioIrqParams( RngMasterIrqMask, RngMasterIrqMask, SX1280_IRQ_RADIO_NONE, SX1280_IRQ_RADIO_NONE);
     }
     else
     {
-        SX1280SetDeviceRangingAddress(RANGING_DIVICE_ADDR);
+        SX1280SetDeviceRangingAddress(address);
         SX1280SetDioIrqParams( RngSlaveIrqMask, RngSlaveIrqMask, SX1280_IRQ_RADIO_NONE, SX1280_IRQ_RADIO_NONE);
     }
 

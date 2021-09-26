@@ -36,7 +36,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define LORANGE_ENTITY MASTER
+#define LORANGE_ENTITY SLAVE
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -48,6 +48,7 @@
 
 /* USER CODE BEGIN PV */
 double distance;
+uint32_t RangingDemoAddress =  0x00010001;
 char RTT_UpBuffer[4096];
 struct{
   int distance;
@@ -114,12 +115,12 @@ int main(void)
   if(LORANGE_ENTITY)
   {
     printf("Slave\n");
-    RangingInit(SX1280_RADIO_RANGING_ROLE_SLAVE);
+    RangingInit(SX1280_RADIO_RANGING_ROLE_SLAVE,RangingDemoAddress);
   }
   else
   {
     printf("Master\n");
-    RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER);
+    RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
   }
   HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET);
   /* USER CODE END 2 */
@@ -133,7 +134,7 @@ int main(void)
     {
       if(LORANGE_ENTITY)
       {
-        RangingStart(SX1280_RADIO_RANGING_ROLE_SLAVE);
+        RangingStart(SX1280_RADIO_RANGING_ROLE_SLAVE,RangingDemoAddress);
       }
       else
       {
@@ -142,7 +143,7 @@ int main(void)
         RTT_Value.distance = distance * 10;
         SEGGER_RTT_Write(1,&RTT_Value,sizeof(RTT_Value));
         //HAL_Delay(500);
-        RangingStart(SX1280_RADIO_RANGING_ROLE_MASTER);
+        RangingStart(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
       }
     }
     else

@@ -39,8 +39,8 @@
 
 void RangingSetParams( void );
 void RangingInitRadio( void );
-void RangingInit(SX1280_RadioRangingRoles_t role);
-void RangingStart(SX1280_RadioRangingRoles_t role);
+void RangingInit(SX1280_RadioRangingRoles_t role, uint32_t address);
+void RangingStart(SX1280_RadioRangingRoles_t role, uint32_t address);
 void LoRaSetPayloadLength(uint8_t length);
 void LoRaSendData(uint8_t* txBuffer, uint8_t size);
 void LoRaSetRx( void );
