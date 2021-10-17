@@ -237,7 +237,7 @@ void LPTIM1_IRQHandler(void)
   /* USER CODE END LPTIM1_IRQn 0 */
   HAL_LPTIM_IRQHandler(&hlptim1);
   /* USER CODE BEGIN LPTIM1_IRQn 1 */
-  HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_4);
+  HAL_LPTIM1_INT_Callback();
   /* USER CODE END LPTIM1_IRQn 1 */
 }
 

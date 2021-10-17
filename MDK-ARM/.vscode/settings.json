@@ -7,6 +7,13 @@
         "main.h": "c",
         "spi.h": "c",
         "rangingcorrection.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "limits": "c",
+        "memory": "c",
+        "bit": "c",
+        "compare": "c",
+        "cstddef": "c",
+        "type_traits": "c",
+        "xutility": "c"
     }
 }

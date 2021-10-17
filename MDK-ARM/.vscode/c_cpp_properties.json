@@ -98,20 +98,18 @@
         {
             "name": "LPS",
             "includePath": [
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LPS\\Core\\Inc",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LPS\\Drivers\\STM32L4xx_HAL_Driver\\Inc",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LPS\\Drivers\\STM32L4xx_HAL_Driver\\Inc\\Legacy",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LPS\\Drivers\\CMSIS\\Device\\ST\\STM32L4xx\\Include",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LPS\\Drivers\\CMSIS\\Include",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LPS\\LoRa\\Inc",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LPS\\LoRa\\Inc\\rangingCorrection",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LPS\\Core\\Config",
-                "C:\\Keil_v5\\ARM\\ARMCC\\include",
-                "C:\\Keil_v5\\ARM\\ARMCC\\include\\rw",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LPS\\MDK-ARM",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LPS\\Core\\Src",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LPS\\Drivers\\STM32L4xx_HAL_Driver\\Src",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LPS\\LoRa\\Src"
+                "c:\\Users\\lth03\\Desktop\\EECS\\SRTP\\Project\\LPS\\Core\\Inc",
+                "c:\\Users\\lth03\\Desktop\\EECS\\SRTP\\Project\\LPS\\Drivers\\STM32L4xx_HAL_Driver\\Inc",
+                "c:\\Users\\lth03\\Desktop\\EECS\\SRTP\\Project\\LPS\\Drivers\\STM32L4xx_HAL_Driver\\Inc\\Legacy",
+                "c:\\Users\\lth03\\Desktop\\EECS\\SRTP\\Project\\LPS\\Drivers\\CMSIS\\Device\\ST\\STM32L4xx\\Include",
+                "c:\\Users\\lth03\\Desktop\\EECS\\SRTP\\Project\\LPS\\Drivers\\CMSIS\\Include",
+                "c:\\Users\\lth03\\Desktop\\EECS\\SRTP\\Project\\LPS\\LoRa\\Inc",
+                "c:\\Users\\lth03\\Desktop\\EECS\\SRTP\\Project\\LPS\\LoRa\\Inc\\rangingCorrection",
+                "c:\\Users\\lth03\\Desktop\\EECS\\SRTP\\Project\\LPS\\Core\\Config",
+                "c:\\Users\\lth03\\Desktop\\EECS\\SRTP\\Project\\LPS\\MDK-ARM",
+                "c:\\Users\\lth03\\Desktop\\EECS\\SRTP\\Project\\LPS\\Core\\Src",
+                "c:\\Users\\lth03\\Desktop\\EECS\\SRTP\\Project\\LPS\\Drivers\\STM32L4xx_HAL_Driver\\Src",
+                "c:\\Users\\lth03\\Desktop\\EECS\\SRTP\\Project\\LPS\\LoRa\\Src"
             ],
             "defines": [
                 "USE_HAL_DRIVER",

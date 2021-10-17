@@ -32,12 +32,18 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+typedef enum
+{
+    DEVICE_MODE_IDLERX                              = 0x00,
+    DEVICE_MODE_TXALIVE,
+    DEVICE_MODE_RANGING,                                                        
+}DeviceStates_t;
+DeviceStates_t DeviceState=DEVICE_MODE_IDLERX;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define LORANGE_ENTITY SLAVE
+#define LORANGE_ENTITY MASTER
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -51,6 +57,11 @@
 double distance;
 uint32_t RangingDemoAddress =  0x00010001;
 uint8_t RangingDoneFlag = 0;
+uint8_t RxDoneFlag = 0;
+uint8_t RxData[20];
+uint8_t RxSize = 1;
+uint8_t TxData[8]="aassaapp";
+uint8_t count = 0;
 char RTT_UpBuffer[4096];
 struct{
   int distance;
@@ -65,15 +76,38 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void HAL_LPTIM1_INT_Callback(void)
+{
+  HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_4);
+  //TODO: send alive packet 
+  if(LORANGE_ENTITY==MASTER)
+  {
+    count++;
+    if(count>20)
+    {
+      LoRaSendData(TxData, 8);
+      DeviceState = DEVICE_MODE_TXALIVE;
+      count = 0;
+    }
+  }
+  
+
+}
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  if(GPIO_Pin == GPIO_PIN_4)
+  if(GPIO_Pin == GPIO_PIN_4)//Ranging Interrupt
   {
-    SX1280_PacketStatus_t *pktStatus;
-    SX1280GetPacketStatus(pktStatus);
-    printf("EXTI, RSSI=%f, IRQ=%d, RSSI2=%d\n",((double)(-((int8_t)SX1280GetRssiInst())))/2,SX1280GetIrqStatus(),pktStatus->Params.LoRa.RssiPkt);
-    RangingDoneFlag = 1;
-    SX1280ClearIrqStatus(0xffff);
+    if(DeviceState == DEVICE_MODE_IDLERX)
+    {
+      SX1280_PacketStatus_t *pktStatus;
+      SX1280GetPacketStatus(pktStatus);
+      printf("EXTI, RSSI=%f, IRQ=%d, RSSI2=%d\n",((double)(-((int8_t)SX1280GetRssiInst())))/2,SX1280GetIrqStatus(),pktStatus->Params.LoRa.RssiPkt);
+    }
+    if(DeviceState == DEVICE_MODE_RANGING) RangingDoneFlag = 1;
+    else if(DeviceState == DEVICE_MODE_IDLERX) 
+    {RxDoneFlag = 1;  }
+    else printf("Unknown\n");
+    SX1280ClearIrqStatus(SX1280_IRQ_RADIO_ALL);
   }
 }
 /* USER CODE END 0 */
@@ -114,46 +148,66 @@ int main(void)
   RangingSetParams();
   RangingInitRadio();
   printf("Version:%x\n",SX1280GetFirmwareVersion());
-  if(LORANGE_ENTITY)
+  // if(LORANGE_ENTITY)
+  // {
+  //   printf("Slave\n");
+  //   RangingInit(SX1280_RADIO_RANGING_ROLE_SLAVE,RangingDemoAddress);
+  // }
+  // else
+  // {
+  //   printf("Master\n");
+  //   RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
+  // }
+  
+  HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xFFFF,0);
+  if(LORANGE_ENTITY == MASTER)
   {
-    printf("Slave\n");
-    RangingInit(SX1280_RADIO_RANGING_ROLE_SLAVE,RangingDemoAddress);
+    DeviceState = DEVICE_MODE_TXALIVE;
   }
   else
   {
-    printf("Master\n");
-    RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
+    LoRaSetRx();
   }
-  
-  HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xFFFF,0);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    
-    //if(HAL_GPIO_ReadPin(SX1280_DIO1_GPIO_Port,SX1280_DIO1_Pin) == 1)
-    if(RangingDoneFlag)
+    // if(RangingDoneFlag)
+    // {
+    //   if(LORANGE_ENTITY)//slave
+    //   {
+    //     RangingInit(SX1280_RADIO_RANGING_ROLE_SLAVE,RangingDemoAddress);
+    //   }
+    //   else//master
+    //   {
+    //     distance = SX1280GetRangingResult(SX1280_RANGING_RESULT_RAW);
+    //     printf("distance is : %.2lfm\n",distance);
+    //     RTT_Value.distance = distance * 10;
+    //     SEGGER_RTT_Write(1,&RTT_Value,sizeof(RTT_Value));
+    //     HAL_Delay(10);
+    //     RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
+    //   }
+    //   RangingDoneFlag = 0;
+    // }
+
+    switch (DeviceState)
     {
-      if(LORANGE_ENTITY)
+    case DEVICE_MODE_TXALIVE:
+      DeviceState = DEVICE_MODE_TXALIVE; 
+      break;
+    case DEVICE_MODE_IDLERX:
+      if(RxDoneFlag)
       {
-        RangingStart(SX1280_RADIO_RANGING_ROLE_SLAVE,RangingDemoAddress);
+        SX1280GetPayload(RxData, &RxSize, 20);
+        printf("Receive%d %s\n",RxSize,RxData);
+        RxDoneFlag = 0;
+        LoRaSetRx();
       }
-      else
-      {
-        distance = SX1280GetRangingResult(SX1280_RANGING_RESULT_RAW);
-        printf("distance is : %.2lfm\n",distance);
-        RTT_Value.distance = distance * 10;
-        SEGGER_RTT_Write(1,&RTT_Value,sizeof(RTT_Value));
-        HAL_Delay(10);
-        RangingStart(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
-      }
-      RangingDoneFlag = 0;
-    }
-    else
-    {
-      
+      break;
+    default:
+      break;
     }
     //
     /* USER CODE END WHILE */

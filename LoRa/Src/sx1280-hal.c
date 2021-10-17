@@ -39,6 +39,7 @@ void SpiIn(uint8_t *txBuffer, uint16_t size)
 }
 void SpiInOut(uint8_t *txBuffer, uint8_t *rxBuffer, uint16_t size)
 {
+    HAL_SPIEx_FlushRxFifo( &hspi1 );
     HAL_SPI_TransmitReceive(&hspi1, txBuffer, rxBuffer, size, HAL_MAX_DELAY);
 }
 /*!
