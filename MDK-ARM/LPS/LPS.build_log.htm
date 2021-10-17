@@ -17,7 +17,7 @@ Library Manager: ArmAr.exe V5.06 update 6 (build 750)
 Hex Converter:   FromElf.exe V5.06 update 6 (build 750)
 CPU DLL:         SARMCM3.DLL V5.28.0.0
 Dialog DLL:      DCM.DLL V1.17.3.0
-Target DLL:      Segger\JL2CM3.dll V2.99.36.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.6.0
 Dialog DLL:      TCM.DLL V1.36.2.0
  
 <h2>Project:</h2>
@@ -28,10 +28,15 @@ Project File Date:  10/17/2021
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'LPS'
 compiling main.c...
+../Core/Src/main.c(89): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
+      sprintf(TxData,"%8dAA",TxTimestamp);
+../Core/Src/main.c(90): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "const char *"
+      TxLength = strlen(TxData);
+../Core/Src/main.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=23448 RO-data=25480 RW-data=228 ZI-data=9068  
+Program Size: Code=23576 RO-data=25480 RW-data=236 ZI-data=9068  
 FromELF: creating hex file...
-".\LPS\LPS.axf" - 0 Error(s), 0 Warning(s).
+".\LPS\LPS.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 

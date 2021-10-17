@@ -60,8 +60,10 @@ uint8_t RangingDoneFlag = 0;
 uint8_t RxDoneFlag = 0;
 uint8_t RxData[20];
 uint8_t RxSize = 1;
-uint8_t TxData[8]="aassaapp";
-uint8_t count = 0;
+uint32_t TxTimestamp;
+uint8_t TxLength;
+uint8_t TxData[10]="aassaappqq";
+uint8_t LPTIM1Count = 0;
 char RTT_UpBuffer[4096];
 struct{
   int distance;
@@ -79,34 +81,39 @@ void SystemClock_Config(void);
 void HAL_LPTIM1_INT_Callback(void)
 {
   HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_4);
-  //TODO: send alive packet 
-  if(LORANGE_ENTITY==MASTER)
+  LPTIM1Count++;
+  if(LPTIM1Count>10)
   {
-    count++;
-    if(count>20)
-    {
-      LoRaSendData(TxData, 8);
-      DeviceState = DEVICE_MODE_TXALIVE;
-      count = 0;
-    }
+    DeviceState = DEVICE_MODE_TXALIVE;
+    TxTimestamp = HAL_GetTick();
+    sprintf(TxData,"%8dAA",TxTimestamp);
+    TxLength = strlen(TxData);
+    LoRaSendData(TxData, TxLength);
+    LPTIM1Count = 0;
   }
-  
-
 }
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if(GPIO_Pin == GPIO_PIN_4)//Ranging Interrupt
   {
-    if(DeviceState == DEVICE_MODE_IDLERX)
+    SX1280_PacketStatus_t *pktStatus;
+    SX1280GetPacketStatus(pktStatus);
+    uint16_t IrqStatus = SX1280GetIrqStatus();
+    printf("EXTI, RSSI=%f, IRQ=%d, RSSI2=%d\n",((double)(-((int8_t)SX1280GetRssiInst())))/2,IrqStatus,pktStatus->Params.LoRa.RssiPkt);
+    if((IrqStatus & SX1280_IRQ_TX_DONE) == SX1280_IRQ_TX_DONE)
     {
-      SX1280_PacketStatus_t *pktStatus;
-      SX1280GetPacketStatus(pktStatus);
-      printf("EXTI, RSSI=%f, IRQ=%d, RSSI2=%d\n",((double)(-((int8_t)SX1280GetRssiInst())))/2,SX1280GetIrqStatus(),pktStatus->Params.LoRa.RssiPkt);
+        DeviceState = DEVICE_MODE_IDLERX; 
+        LoRaSetRx();
+        printf("TxDone %d \n",TxTimestamp);
     }
+    if((IrqStatus & SX1280_IRQ_RX_DONE) == SX1280_IRQ_RX_DONE)
+    {
+        RxDoneFlag = 1;
+        printf("RxDone\n");
+    }
+
     if(DeviceState == DEVICE_MODE_RANGING) RangingDoneFlag = 1;
-    else if(DeviceState == DEVICE_MODE_IDLERX) 
-    {RxDoneFlag = 1;  }
-    else printf("Unknown\n");
+
     SX1280ClearIrqStatus(SX1280_IRQ_RADIO_ALL);
   }
 }
@@ -160,14 +167,7 @@ int main(void)
   // }
   
   HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xFFFF,0);
-  if(LORANGE_ENTITY == MASTER)
-  {
-    DeviceState = DEVICE_MODE_TXALIVE;
-  }
-  else
-  {
-    LoRaSetRx();
-  }
+  LoRaSetRx();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -194,9 +194,6 @@ int main(void)
 
     switch (DeviceState)
     {
-    case DEVICE_MODE_TXALIVE:
-      DeviceState = DEVICE_MODE_TXALIVE; 
-      break;
     case DEVICE_MODE_IDLERX:
       if(RxDoneFlag)
       {

@@ -9,12 +9,12 @@ uint8_t RngBuffer[RNG_BUFFER_SIZE];
 /*!
  * \brief Mask of IRQs to listen to in rx mode
  */
-uint16_t RngRxIrqMask = SX1280_IRQ_RX_DONE | SX1280_IRQ_RX_TX_TIMEOUT;
+uint16_t RngRxIrqMask = SX1280_IRQ_RX_DONE | SX1280_IRQ_RX_TX_TIMEOUT | SX1280_IRQ_TX_DONE;
 
 /*!
  * \brief Mask of IRQs to listen to in tx mode
  */
-uint16_t RngTxIrqMask = SX1280_IRQ_TX_DONE | SX1280_IRQ_RX_TX_TIMEOUT;
+uint16_t RngTxIrqMask = SX1280_IRQ_TX_DONE | SX1280_IRQ_RX_TX_TIMEOUT | SX1280_IRQ_TX_DONE;
 
 /**!
  * \brief Mask of IRQs to listen to in ranging slave mode

@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32L476xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;     ../Drivers/STM32L4xx_HAL_Driver/Inc;     ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;     ../Drivers/CMSIS/Device/ST/STM32L4xx/Include;     ../Drivers/CMSIS/Include;     ..\LoRa\Inc;     ..\LoRa\Inc\rangingCorrection;     ..\Core\Config</IncludePath>
+              <IncludePath>../Core/Inc;      ../Drivers/STM32L4xx_HAL_Driver/Inc;      ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;      ../Drivers/CMSIS/Device/ST/STM32L4xx/Include;      ../Drivers/CMSIS/Include;      ..\LoRa\Inc;      ..\LoRa\Inc\rangingCorrection;      ..\Core\Config</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
