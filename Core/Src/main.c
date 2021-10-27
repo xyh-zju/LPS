@@ -23,6 +23,7 @@
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
+#include "route.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -38,6 +39,13 @@ typedef enum
     DEVICE_MODE_TXALIVE,
     DEVICE_MODE_RANGING,                                                        
 }DeviceStates_t;
+
+extern int EntryNumber;
+extern int RTindex[];
+extern RT_Entry* RouteTable[];
+extern uint32_t reply_ip;
+extern uint32_t My_addr;
+
 DeviceStates_t DeviceState=DEVICE_MODE_IDLERX;
 /* USER CODE END PTD */
 
@@ -62,9 +70,23 @@ uint8_t RxData[20];
 uint8_t RxSize = 1;
 uint32_t TxTimestamp;
 uint8_t TxLength;
-uint8_t TxData[10]="aassaappqq";
+uint8_t* TxData;
 uint8_t LPTIM1Count = 0;
 char RTT_UpBuffer[4096];
+struct
+{
+  uint8_t AliveTxInterval;
+}AliveTxParams;
+struct
+{
+  uint8_t TxDone;
+}ProcDoneFlag;
+typedef struct 
+{
+  uint32_t ID;
+  uint32_t LastSeen;
+}RouteTableElement_t;
+
 struct{
   int distance;
 }RTT_Value;
@@ -78,23 +100,87 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void HAL_LPTIM1_INT_Callback(void)
+void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 {
-  HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_4);
-  LPTIM1Count++;
-  if(LPTIM1Count>10)
+
+
+
+
+
+// 	static int turn=0;
+//   HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_4);
+//   LPTIM1Count++;
+//   if(LPTIM1Count>AliveTxParams.AliveTxInterval)
+//   {
+//     DeviceState = DEVICE_MODE_TXALIVE;
+//     TxTimestamp = HAL_GetTick();
+// //	  TxData = (uint8_t*)malloc(20*sizeof(uint8_t));
+// //    sprintf(TxData,"hello from label%d", turn++);
+// //    TxLength = strlen(TxData);
+// //    LoRaSendData(TxData, TxLength); //send data here
+		
+// 		MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage));
+// 		p->type=0;
+// 		p->length=1;
+// 		p->dest=turn;
+// 		p->src=11;
+// 		p->ttl=turn++;
+// 		TxLength = sizeof(*p);
+// 		LoRaSendData((uint8_t*)p, TxLength);
+// 		if(turn==10) turn=0;
+//     LPTIM1Count = 0;
+//   }
+}
+
+// void HAL_RECV_Callback(void){
+// 	switch (DeviceState)
+//     {
+//     case DEVICE_MODE_IDLERX:
+//       if(RxDoneFlag)
+//       {
+//         SX1280GetPayload(RxData, &RxSize, 20);
+// 				MeshPackage* p=(MeshPackage*)RxData;
+// 				Mesh_Recieve((char*)RxData, RxSize);
+// //        printf("RT_num=%d\n",EntryNumber);
+// //				for(int i=0; i<EntryNumber; i++){
+// //					printf("des:%d, flag:%d, fresh:%d, next:%d, num:%d\n",RouteTable[i]->des_addr, RouteTable[i]->flag, RouteTable[i]->Freshness, RouteTable[i]->next_hop, RouteTable[i]->num_hops);
+// //				}
+
+//         RxDoneFlag = 0;
+//         LoRaSetRx();
+//       }
+//       break;
+//     default:
+//       break;
+//     }
+// }
+
+void parse_package(MeshPackage* p){
+  if(p->type==0) //join
   {
-    DeviceState = DEVICE_MODE_TXALIVE;
-    TxTimestamp = HAL_GetTick();
-    sprintf(TxData,"%8dAA",TxTimestamp);
-    TxLength = strlen(TxData);
-    LoRaSendData(TxData, TxLength);
-    LPTIM1Count = 0;
+    Mesh_Reply_Join(p);
+  }
+  else if(p->type==1&&p->des_addr==My_addr) //join/find reply
+  {
+    Mesh_Handle_Reply(p);
+  }
+  else if(p->type==2&&p->des_addr==My_addr) //transmit
+  {
+    Mesh_transmit(p);
+  }
+  else if(p->type==3) //broadcasting find
+  {
+
+  }
+  else //undefined package
+  {
+
   }
 }
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  if(GPIO_Pin == GPIO_PIN_4)//Ranging Interrupt
+  if(GPIO_Pin == GPIO_PIN_4)//SX1280 Interrupt
   {
     SX1280_PacketStatus_t *pktStatus;
     SX1280GetPacketStatus(pktStatus);
@@ -105,6 +191,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         DeviceState = DEVICE_MODE_IDLERX; 
         LoRaSetRx();
         printf("TxDone %d \n",TxTimestamp);
+        ProcDoneFlag.TxDone = 1;
     }
     if((IrqStatus & SX1280_IRQ_RX_DONE) == SX1280_IRQ_RX_DONE)
     {
@@ -151,6 +238,8 @@ int main(void)
   MX_USART2_UART_Init();
   MX_LPTIM1_Init();
   /* USER CODE BEGIN 2 */
+  AliveTxParams.AliveTxInterval = 60;
+  ProcDoneFlag.TxDone =0;
   printf("LoRange| Bulid:%s\n",__DATE__);
   RangingSetParams();
   RangingInitRadio();
@@ -166,7 +255,8 @@ int main(void)
   //   RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
   // }
   
-  HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xFFFF,0);
+  HAL_LPTIM_TimeOut_Start_IT(&hlptim1,3000,0);
+  
   LoRaSetRx();
   /* USER CODE END 2 */
 
@@ -174,35 +264,27 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    // if(RangingDoneFlag)
-    // {
-    //   if(LORANGE_ENTITY)//slave
-    //   {
-    //     RangingInit(SX1280_RADIO_RANGING_ROLE_SLAVE,RangingDemoAddress);
-    //   }
-    //   else//master
-    //   {
-    //     distance = SX1280GetRangingResult(SX1280_RANGING_RESULT_RAW);
-    //     printf("distance is : %.2lfm\n",distance);
-    //     RTT_Value.distance = distance * 10;
-    //     SEGGER_RTT_Write(1,&RTT_Value,sizeof(RTT_Value));
-    //     HAL_Delay(10);
-    //     RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
-    //   }
-    //   RangingDoneFlag = 0;
-    // }
-
     switch (DeviceState)
     {
     case DEVICE_MODE_IDLERX:
       if(RxDoneFlag)
       {
         SX1280GetPayload(RxData, &RxSize, 20);
-        printf("Receive%d %s\n",RxSize,RxData);
+				MeshPackage* p=(MeshPackage*)RxData;
+        //analyse the package
+        parse_package(p);
+
         RxDoneFlag = 0;
         LoRaSetRx();
+			// 	Mesh_Recieve((char*)RxData, RxSize);
+      //  printf("RT_num=%d\n",EntryNumber);
+			// 	for(int i=0; i<EntryNumber; i++){
+			// 		printf("des:%d, flag:%d, fresh:%d, next:%d, num:%d\n",RouteTable[i]->des_addr, RouteTable[i]->flag, RouteTable[i]->Freshness, RouteTable[i]->next_hop, RouteTable[i]->num_hops);
+			// 	}
       }
       break;
+    case DEVICE_MODE_RANGING:
+      //waiting for ranging
     default:
       break;
     }
@@ -212,6 +294,36 @@ int main(void)
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
+	
+//	for(int i=0; i<10; i++){
+//		MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage));
+//		p->type=0;
+//		p->length=1;
+//		p->dest=i;
+//		p->src=11;
+//		p->ttl=i;
+//		TxLength = sizeof(*p);
+//		LoRaSendData((uint8_t*)p, TxLength);
+//		LoRaSetRx();
+//		uint32_t timer=0;
+//		//uint8_t success_flag=0;
+//		while(timer<=10000000){
+////			if(reply_ip==i) {
+////				success_flag=1;
+////				break;
+////			}
+//			HAL_RECV_Callback();
+//			timer++;
+//		}
+//		//HAL_RECV_Callback();
+//		
+//		if(reply_ip==i) printf("success transmit!");
+//		else {
+//			printf("repeat send des=%d", i--);
+//		}
+//		
+//	}
+	
 }
 
 /**

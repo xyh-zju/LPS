@@ -67,6 +67,7 @@ void Error_Handler(void);
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 void HAL_LPTIM1_INT_Callback(void);
+void HAL_RECV_Callback(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
