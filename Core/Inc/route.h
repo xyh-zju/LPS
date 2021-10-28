@@ -10,24 +10,25 @@ typedef enum
 }DeviceStates_t;
 
 typedef struct WAITING{
-    uint8_t type; //1 for find route and return, 2 for recieved message, 3 for find route and transmit
+    uint8_t type; //1 for broadcasting find route, 2 for transmit
     uint8_t resendNumber;
-    uint16_t seq;
-    uint32_t des_addr;
-    uint32_t require_addr;
-    MeshPackage* package;
+    uint16_t seq; //包在自己中的序号
+    uint16_t pseq; //包在上一个结点中的序号
+    uint32_t des_addr; //监听某个地址的回复
+    uint32_t require_addr; //发出请求的上家的地址
+    MeshPackage* package; //转发包时先发出请求包，存储转发内容，找到路由后转发
     struct WAITING* next;
 } WaitingNode;
 
 typedef struct MESHPACKAGE{
-    uint8_t type; //0 for join, 1 for apply, 2 for transmit, 3 for broadcasting find
+    uint8_t type; //0 for join, 1 for apply, 2 for hop-transmit, 3 for broadcasting find
     uint8_t ttl;
     uint16_t seq;
     uint16_t ack;
     uint16_t hops;
-    uint32_t des_addr; 
-    uint32_t final_addr; 
-    uint32_t src; 
+    uint32_t hop_addr; //广播包为发送本包的地址，hop包为下一个中继的地址
+    uint32_t des_addr; //目标地址
+    uint32_t src_addr; //源地址
     uint32_t length;
     //uint8_t* data;
 } MeshPackage;
