@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.m": "matlab",
         "usart.h": "c",
         "sx1280-hal.h": "c",
         "sx1280.h": "c",
@@ -14,6 +15,7 @@
         "compare": "c",
         "cstddef": "c",
         "type_traits": "c",
-        "xutility": "c"
+        "xutility": "c",
+        "route.h": "c"
     }
 }

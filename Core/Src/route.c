@@ -1,6 +1,7 @@
 #include "route.h"
 #include "main.h"
 #include "ranging.h"
+#include "stdint.h"
 
 uint32_t My_addr;
 
@@ -75,18 +76,18 @@ void reply_Waitinglist(WaitingNode* pwaiting, uint16_t hops){
 	MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage));
 	p->type=1;
 	p->length=0;
-	p->des_addr=pwaiting->required_addr;
+	p->des_addr=pwaiting->require_addr;
 	p->src=My_addr;
 	p->ttl=0;
 	p->ack=pwaiting->seq;
 	p->seq=pwaiting->seq;
 	p->hops=hops+1;
-	Mesh_Send(*p, NULL, 0);
+	Mesh_Send(p, NULL, 0);
 }
 
-void Mesh_Send(MeshPackage head, char* data, int dataLength){
+void Mesh_Send(MeshPackage* head, char* data, int dataLength){
 	uint8_t* p=(uint8_t)malloc(sizeof(head)+dataLength);
-	*p=(uint8_t) head;
+	*p=*(uint8_t*)head;
 	if(data!=NULL){
 		uint8_t* q=p+sizeof(head);
 		*q=*data; //Assemble message package
@@ -96,7 +97,7 @@ void Mesh_Send(MeshPackage head, char* data, int dataLength){
 }
 
 void findRoute_RT(uint32_t des_addr){
-	RT_Entry* p=get_RT(des);
+	RT_Entry* p=get_RT(des_addr);
 	if(p==NULL){ //broadcast to find the route
 		MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage));
 		p->type=3;
@@ -107,7 +108,7 @@ void findRoute_RT(uint32_t des_addr){
 		p->ack=0;
 		p->seq=SEQ; //each waiting package must have a unique seq
 		p->hops=0;
-		Mesh_Send(*p, NULL, 0);
+		Mesh_Send(p, NULL, 0);
 		//add to the waiting list
 		//set a timer to resend the request
 		//if 
@@ -146,7 +147,7 @@ void delete_RT(uint32_t des){
 		q=p;
 		p=p->next;
 	}
-	if(p!=null){
+	if(p!=NULL){
 		q->next=p->next;
 		free(p);
 			EntryNumber--;
@@ -239,11 +240,11 @@ uint8_t Mesh_Recieve(char* package, int length){
     {
     case 0/* join */:
         /* add to the RT */
-		add_RT(head->des_addr)
+		add_RT(head->des_addr, head->des_addr, 0, 0);
         break;
     case 1/* recieve hello */:
 				printf("Success transmit the info!");
-				reply_ip=head->dest;
+				reply_ip=head->des_addr;
     default:
         break;
     }
@@ -280,7 +281,7 @@ uint8_t Mesh_Reply_Join(MeshPackage* p){
 	p->ack=p->seq;
 	p->seq=p->seq;
 	p->hops=0;
-	Mesh_Send(*p, NULL, 0);
+	Mesh_Send(p, NULL, 0);
 }
 
 uint8_t Mesh_Handle_Reply(MeshPackage* p){
@@ -294,11 +295,11 @@ uint8_t Mesh_transmit(MeshPackage* p){
 		WaitingNode* wp = add_Waitinglist(1, SEQ, p->des_addr, My_addr);
 		SEQ++;
 		uint8_t* savedpackage=(uint8_t*)malloc(sizeof(MeshPackage)+p->length);
-		*savedpackage = *(uint8_t)p;
+		*savedpackage = *(uint8_t*)p;
 		wp->package = savedpackage;
 	}
 	else{ //the route is in the route table, transmit
-		Mesh_Send(*p, p+sizeof(MeshPackage), p->length);
+		Mesh_Send(p, p+sizeof(MeshPackage), p->length);
 		//transmit directly without waiting for the reply
 	}
 }
