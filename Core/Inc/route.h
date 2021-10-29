@@ -16,17 +16,17 @@ typedef struct WAITING{
     uint16_t pseq; //包在上一个结点中的序号
     uint32_t des_addr; //监听某个地址的回复
     uint32_t require_addr; //发出请求的上家的地址
-    MeshPackage* package; //转发包时先发出请求包，存储转发内容，找到路由后转发
+    uint8_t* package_stream; //储存待转发内容，包含包头和数据
     struct WAITING* next;
 } WaitingNode;
 
 typedef struct MESHPACKAGE{
-    uint8_t type; //0 for join, 1 for apply, 2 for hop-transmit, 3 for broadcasting find
+    uint8_t type; //0 for join, 1 for reply, 2 for hop-transmit, 3 for broadcasting find
     uint8_t ttl;
     uint16_t seq;
     uint16_t ack;
     uint16_t hops;
-    uint32_t hop_addr; //广播包为发送本包的地址，hop包为下一个中继的地址
+    uint32_t hop_addr; //广播包为发送本包的地址，消息包为下一个中继的地址
     uint32_t des_addr; //目标地址
     uint32_t src_addr; //源地址
     uint32_t length;
@@ -48,10 +48,11 @@ typedef struct RT_ENTRY{
 
 void init_Route();
 
-uint8_t Mesh_Recieve(char* package, int length);
 uint8_t Mesh_Reply_Join(uint32_t des);
-uint8_t Mesh_Handle_Reply(MeshPackage* p);
-uint8_t Mesh_transmit(MeshPackage* p);
+uint8_t Mesh_Reply(MeshPackage* package);
+uint8_t Mesh_Handle_Reply(MeshPackage* package);
+uint8_t Mesh_Handle_Broadcast(MeshPackage* package);
+uint8_t Mesh_transmit(MeshPackage* package);
 //int Mesh_RouteFound(uint32_t destination);
 //uint8_t Mesh_Construct(uint32_t destination);
 //uint8_t Mesh_RouteMaintenance();

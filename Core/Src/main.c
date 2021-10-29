@@ -155,26 +155,34 @@ void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 //     }
 // }
 
-void parse_package(MeshPackage* p){
-  if(p->type==0) //join
+void parse_package(MeshPackage* package){
+  if(package->type==0) //join
   {
-    Mesh_Reply_Join(p);
+    Mesh_Reply_Join(package);
   }
-  else if(p->type==1&&p->des_addr==My_addr) //join/find reply
+  else if(package->type==1&&package->des_addr==My_addr) //针对自己的应答包
   {
-    Mesh_Handle_Reply(p);
+    Mesh_Handle_Reply(package);
   }
-  else if(p->type==2&&p->des_addr==My_addr) //transmit
+  else if(package->type==2&&package->hop_addr==My_addr) //转发包
   {
-    Mesh_transmit(p);
+    if(package->des_addr==My_addr) //收到的是发给自己的包
+    {
+      Mesh_Reply(package);
+      //处理数据
+    }
+    else //别人的包
+    {
+      Mesh_transmit(package);
+    }
   }
-  else if(p->type==3) //broadcasting find
+  else if(package->type==3) //广播查找
   {
-
+    Mesh_Handle_Broadcast(package);
   }
   else //undefined package
   {
-
+    printf("Undefined package");
   }
 }
 
@@ -270,9 +278,9 @@ int main(void)
       if(RxDoneFlag)
       {
         SX1280GetPayload(RxData, &RxSize, 20);
-				MeshPackage* p=(MeshPackage*)RxData;
+				MeshPackage* package=(MeshPackage*)RxData;
         //analyse the package
-        parse_package(p);
+        parse_package(package);
 
         RxDoneFlag = 0;
         LoRaSetRx();
