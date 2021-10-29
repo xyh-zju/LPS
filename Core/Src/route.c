@@ -16,11 +16,10 @@ uint32_t reply_ip;
 uint16_t SEQ=1; //自己对包的编号，保证waiting无重复
 extern DeviceStates_t DeviceState;
 extern uint8_t RxDoneFlag;
-extern uint8_t RxDoneFlag;
 extern uint8_t RxData[];
 extern uint8_t RxSize;
-
-void init_Waitinglist(){
+//初始化等待列表，哨兵结点
+void init_Waitinglist(){ 
 	Waitinglist=(WaitingNode*)malloc(sizeof(WaitingNode));
 	Waitinglist->next=NULL;
 	Waitinglist->seq=0;
@@ -32,7 +31,7 @@ void init_Waitinglist(){
 	Waitinglist->package_stream=NULL;
 	WaitingNumber=0;
 }
-
+//添加等待任务
 WaitingNode* add_Waitinglist(uint8_t type, uint16_t seq, uint16_t pseq, uint32_t des_addr, uint32_t require_addr, uint8_t* package_stream){
 	WaitingNode* p=(WaitingNode*)malloc(sizeof(WaitingNode));
 	p->next=Waitinglist->next;
@@ -47,7 +46,7 @@ WaitingNode* add_Waitinglist(uint8_t type, uint16_t seq, uint16_t pseq, uint32_t
 	Waitinglist->next=p;
 	return p;
 }
-
+//发送数据包
 void Mesh_Send(MeshPackage* head, char* data, int dataLength){
 	uint8_t* p=(uint8_t)malloc(sizeof(head)+dataLength);
 	*p=*(uint8_t*)head;
@@ -58,7 +57,7 @@ void Mesh_Send(MeshPackage* head, char* data, int dataLength){
 	LoRaSendData(p, sizeof(head)+dataLength);
 	LoRaSetRx();
 }
-
+//查找路由
 void findRoute_RT(uint32_t des_addr, uint32_t require_addr, uint16_t hops){ //发送路由查找包
 	MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage));
 	p->type=3;
@@ -73,7 +72,7 @@ void findRoute_RT(uint32_t des_addr, uint32_t require_addr, uint16_t hops){ //�
 	Mesh_Send(p, NULL, 0);
 	free(p);
 }
-
+// 初始化路由表
 void init_RT(){
 	RTHead=(RT_Entry*)malloc(sizeof(RT_Entry));
 	RTHead->des_addr=0;
@@ -84,7 +83,7 @@ void init_RT(){
 	RTHead->next=NULL;
 	EntryNumber=0;
 }
-
+// 获取路由路径信息
 RT_Entry* get_RT(uint32_t des){
 	RT_Entry* p=RTHead->next;
 	while(p!=NULL){
@@ -95,7 +94,7 @@ RT_Entry* get_RT(uint32_t des){
 	}
 	return p; //not found return null, found return pointer
 }
-
+// 删除路由路径
 void delete_RT(uint32_t des){
 	RT_Entry* p=RTHead->next;
 	RT_Entry* q=RTHead;
@@ -112,7 +111,7 @@ void delete_RT(uint32_t des){
 			EntryNumber--;
 	}
 }
-
+// 添加路由路径
 void add_RT(uint32_t des, uint32_t nextHop, uint16_t numHops, uint16_t fresh){
 	RT_Entry* p=get_RT(des);
 	if(p==NULL){ // add
@@ -134,7 +133,7 @@ void add_RT(uint32_t des, uint32_t nextHop, uint16_t numHops, uint16_t fresh){
 		}
 	}
 }
-
+// 清除某一结点为中继的路由线路
 int clearSubs_RT(uint32_t nextHop){
 	RT_Entry* p=RTHead->next;
 	RT_Entry* q=RTHead;
@@ -154,7 +153,7 @@ int clearSubs_RT(uint32_t nextHop){
 	}
 	return num;
 }
-
+// 清除路由表
 int cleanRT_RT(){  //clean the invalid route
 	RT_Entry* p=RTHead->next;
 	RT_Entry* q=RTHead;
@@ -174,11 +173,11 @@ int cleanRT_RT(){  //clean the invalid route
 	}
 	return num;
 }
-
+// 获取路由表路径数量
 int numofRT_RT(){
 	return EntryNumber;
 }
-
+// 回复加入网络申请，未完成
 uint8_t Mesh_Reply_Join(MeshPackage* package){
 	MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage));
 	p->type=1;
@@ -191,7 +190,7 @@ uint8_t Mesh_Reply_Join(MeshPackage* package){
 	p->hops=0;
 	Mesh_Send(p, NULL, 0);
 }
-
+// 处理回复请求
 uint8_t Mesh_Handle_Reply(MeshPackage* package){
 	WaitingNode* p=Waitinglist->next;
 	WaitingNode* q=Waitinglist;
@@ -211,7 +210,7 @@ uint8_t Mesh_Handle_Reply(MeshPackage* package){
 				add_RT(p->des_addr, package->src_addr, package->hops, 0);
 				if(p->require_addr!=My_addr) //有上家需要回复
 				{
-					//回复上家的广播，无法
+					//回复上家的广播
 					MeshPackage* reply=(MeshPackage*)malloc(sizeof(MeshPackage));
 					reply->type=1;
 					reply->length=0;
@@ -235,7 +234,7 @@ uint8_t Mesh_Handle_Reply(MeshPackage* package){
 	}
 	return 0;
 }
-
+// 处理广播包
 uint8_t Mesh_Handle_Broadcast(MeshPackage* package){
 	RT_Entry* rt=get_RT(package->des_addr);
 	if(rt!=NULL) //路由表中有信息，无需查找
@@ -259,6 +258,7 @@ uint8_t Mesh_Handle_Broadcast(MeshPackage* package){
 		findRoute_RT(package->des_addr, package->src_addr, package->hops+1);
 		uint8_t* savedpackage=(uint8_t*)malloc(sizeof(MeshPackage)+package->length); //创建数据包流
 		*savedpackage = *(uint8_t*)package;
+		// 添加等待列表
 		add_Waitinglist(1, SEQ, package->seq, 0, package->src_addr, savedpackage);
 	}
 }
@@ -269,7 +269,7 @@ uint8_t Mesh_Reply(MeshPackage* package) //回复消息包
 	reply->type=1;
 	reply->length=0;
 	reply->des_addr=package->src_addr;
-	reply->hop_addr=0; //在transmit中更新
+	reply->hop_addr=0; //在Mesh_transmit中会被更新为跳转地址
 	reply->src_addr=My_addr;
 	reply->ttl=0;
 	reply->ack=package->seq;
@@ -278,8 +278,8 @@ uint8_t Mesh_Reply(MeshPackage* package) //回复消息包
 	Mesh_transmit(reply);
 	free(reply);
 }
-
-uint8_t Mesh_transmit(MeshPackage* package) //转发包
+//转发包
+uint8_t Mesh_transmit(MeshPackage* package) 
 {
 	RT_Entry*info= get_RT(package->des_addr);
 	if(info==NULL){ //未找到路由，进行查找
@@ -294,7 +294,7 @@ uint8_t Mesh_transmit(MeshPackage* package) //转发包
 		Mesh_Send(package, package+sizeof(MeshPackage), package->length);
 	}
 }
-
+// 初始化路由表
 void init_Route(){
 	init_RT();
 	init_Waitinglist();

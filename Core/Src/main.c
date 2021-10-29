@@ -158,27 +158,29 @@ void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 void parse_package(MeshPackage* package){
   if(package->type==0) //join
   {
-    Mesh_Reply_Join(package);
+    Mesh_Reply_Join(package); //未实现，结点入网申请，是否需要？
   }
   else if(package->type==1&&package->des_addr==My_addr) //针对自己的应答包
   {
-    Mesh_Handle_Reply(package);
+    Mesh_Handle_Reply(package); //处理应答
   }
   else if(package->type==2&&package->hop_addr==My_addr) //转发包
   {
     if(package->des_addr==My_addr) //收到的是发给自己的包
     {
-      Mesh_Reply(package);
+      Mesh_Reply(package); //进行应答
+      
       //处理数据
+
     }
-    else //别人的包
+    else //发给别人的包
     {
-      Mesh_transmit(package);
+      Mesh_transmit(package); //进行转发
     }
   }
   else if(package->type==3) //广播查找
   {
-    Mesh_Handle_Broadcast(package);
+    Mesh_Handle_Broadcast(package); //处理广播请求
   }
   else //undefined package
   {
@@ -279,8 +281,8 @@ int main(void)
       {
         SX1280GetPayload(RxData, &RxSize, 20);
 				MeshPackage* package=(MeshPackage*)RxData;
-        //analyse the package
-        parse_package(package);
+        
+        parse_package(package);//解析包
 
         RxDoneFlag = 0;
         LoRaSetRx();
