@@ -49,7 +49,7 @@ WaitingNode* add_Waitinglist(uint8_t type, uint16_t seq, uint16_t pseq, uint32_t
 //发送数据包
 void Mesh_Send(MeshPackage* head, char* data, int dataLength){
 	printf("In Mesh_send:\n");
-	uint8_t* p=(uint8_t)malloc(sizeof(head)+dataLength);
+	uint8_t* p=(uint8_t*)malloc(sizeof(head)+dataLength);
 	*p=*(uint8_t*)head;
 	if(data!=NULL){
 		uint8_t* q=p+sizeof(head);
@@ -227,7 +227,7 @@ uint8_t Mesh_Handle_Reply(MeshPackage* package){
 				}
 				if(p->package_stream!=NULL) //有包待转发
 				{
-					Mesh_transmit(p->package_stream);
+					Mesh_transmit((MeshPackage*)p->package_stream);
 					free(p->package_stream);
 				}
 			}
@@ -292,7 +292,7 @@ uint8_t Mesh_transmit(MeshPackage* package)
 	else{ //直接转发
 		package->hop_addr=info->next_hop;
 		package->hops++;
-		Mesh_Send(package, package+sizeof(MeshPackage), package->length);
+		Mesh_Send(package, (char* )(package+sizeof(MeshPackage)), package->length);
 	}
 }
 // 初始化路由表

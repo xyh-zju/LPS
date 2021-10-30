@@ -33,12 +33,6 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-typedef enum
-{
-    DEVICE_MODE_IDLERX                              = 0x00,
-    DEVICE_MODE_TXALIVE,
-    DEVICE_MODE_RANGING,                                                        
-}DeviceStates_t;
 
 extern int EntryNumber;
 extern int RTindex[];
@@ -114,7 +108,7 @@ void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 	p->seq=SEQ;
 	p->hops=0;
 	Mesh_Send(p, NULL, 0);
-  printf("Send success!:%s-end\n", p);
+  printf("Send success!:%s-end\n", (uint8_t*)p);
   free(p);
 }
 
@@ -251,7 +245,7 @@ int main(void)
   //   RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
   // }
   
-  HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xfffff,0);
+  HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0x31ffce,0);
   
   LoRaSetRx();
   /* USER CODE END 2 */
@@ -260,6 +254,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+		HAL_LPTIM1_INT_Callback();
     switch (DeviceState)
     {
     case DEVICE_MODE_IDLERX:

@@ -1,4 +1,4 @@
---cpu=Cortex-M4.fp --branchpatch=sdcomp-29491-629360
+--cpu=Cortex-M4.fp.sp --branchpatch=sdcomp-29491-629360
 ".\lps\startup_stm32l476xx.o"
 ".\lps\segger_rtt.o"
 ".\lps\segger_rtt_printf.o"
@@ -35,6 +35,7 @@
 ".\lps\ranging.o"
 ".\lps\sx1280.o"
 ".\lps\sx1280-hal.o"
+".\lps\route.o"
 --library_type=microlib --strict --scatter ".\LPS\LPS.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

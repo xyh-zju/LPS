@@ -8,7 +8,7 @@
 .\lps\gpio.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l4xx.h
 .\lps\gpio.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h
 .\lps\gpio.o: ../Drivers/CMSIS/Include/core_cm4.h
-.\lps\gpio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\lps\gpio.o: D:\Software\Keil\ARM\ARMCC\Bin\..\include\stdint.h
 .\lps\gpio.o: ../Drivers/CMSIS/Include/cmsis_version.h
 .\lps\gpio.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 .\lps\gpio.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -16,7 +16,7 @@
 .\lps\gpio.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h
 .\lps\gpio.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h
 .\lps\gpio.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-.\lps\gpio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\lps\gpio.o: D:\Software\Keil\ARM\ARMCC\Bin\..\include\stddef.h
 .\lps\gpio.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc_ex.h
 .\lps\gpio.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h
 .\lps\gpio.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio_ex.h
@@ -35,10 +35,10 @@
 .\lps\gpio.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h
 .\lps\gpio.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h
 .\lps\gpio.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
-.\lps\gpio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\lps\gpio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\lps\gpio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-.\lps\gpio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+.\lps\gpio.o: D:\Software\Keil\ARM\ARMCC\Bin\..\include\stdio.h
+.\lps\gpio.o: D:\Software\Keil\ARM\ARMCC\Bin\..\include\string.h
+.\lps\gpio.o: D:\Software\Keil\ARM\ARMCC\Bin\..\include\stdlib.h
+.\lps\gpio.o: D:\Software\Keil\ARM\ARMCC\Bin\..\include\math.h
 .\lps\gpio.o: ../Core/Inc/spi.h
 .\lps\gpio.o: ../Core/Inc/main.h
 .\lps\gpio.o: ../Core/Inc/usart.h

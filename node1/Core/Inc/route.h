@@ -48,7 +48,7 @@ typedef struct RT_ENTRY{
 
 void init_Route();
 
-uint8_t Mesh_Reply_Join(uint32_t des);
+uint8_t Mesh_Reply_Join(MeshPackage* package);
 uint8_t Mesh_Reply(MeshPackage* package);
 uint8_t Mesh_Handle_Reply(MeshPackage* package);
 uint8_t Mesh_Handle_Broadcast(MeshPackage* package);

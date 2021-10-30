@@ -33,12 +33,6 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-typedef enum
-{
-    DEVICE_MODE_IDLERX                              = 0x00,
-    DEVICE_MODE_TXALIVE,
-    DEVICE_MODE_RANGING,                                                        
-}DeviceStates_t;
 
 extern int EntryNumber;
 extern int RTindex[];
