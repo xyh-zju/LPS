@@ -98,18 +98,18 @@
         {
             "name": "LPS",
             "includePath": [
-                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\Core\\Inc",
-                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\Drivers\\STM32L4xx_HAL_Driver\\Inc",
-                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\Drivers\\STM32L4xx_HAL_Driver\\Inc\\Legacy",
-                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\Drivers\\CMSIS\\Device\\ST\\STM32L4xx\\Include",
-                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\Drivers\\CMSIS\\Include",
-                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\LoRa\\Inc",
-                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\LoRa\\Inc\\rangingCorrection",
-                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\Core\\Config",
-                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\MDK-ARM",
-                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\Core\\Src",
-                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\Drivers\\STM32L4xx_HAL_Driver\\Src",
-                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\LoRa\\Src"
+                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\node2\\Core\\Inc",
+                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\node2\\Drivers\\STM32L4xx_HAL_Driver\\Inc",
+                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\node2\\Drivers\\STM32L4xx_HAL_Driver\\Inc\\Legacy",
+                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\node2\\Drivers\\CMSIS\\Device\\ST\\STM32L4xx\\Include",
+                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\node2\\Drivers\\CMSIS\\Include",
+                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\node2\\LoRa\\Inc",
+                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\node2\\LoRa\\Inc\\rangingCorrection",
+                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\node2\\Core\\Config",
+                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\node2\\MDK-ARM",
+                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\node2\\Core\\Src",
+                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\node2\\Drivers\\STM32L4xx_HAL_Driver\\Src",
+                "d:\\Unicorn\\ZJU Files\\SRTP\\LPS_share\\node2\\LoRa\\Src"
             ],
             "defines": [
                 "USE_HAL_DRIVER",

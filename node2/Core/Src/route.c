@@ -297,7 +297,7 @@ uint8_t Mesh_transmit(MeshPackage* package)
 }
 // 初始化路由表
 void init_Route(){
-	My_addr=1;
+	My_addr=2;
 	init_RT();
 	init_Waitinglist();
 }

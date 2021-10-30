@@ -154,6 +154,8 @@ void parse_package(MeshPackage* package){
   {
     if(package->des_addr==My_addr) //收到的是发给自己的包
     {
+      printf("Get my package from %d, SEQ=%d\n", package->src_addr, package->seq);
+
       Mesh_Reply(package); //进行应答
       
       //处理数据
