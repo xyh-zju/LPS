@@ -7,7 +7,7 @@
 .\lps\main.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l4xx.h
 .\lps\main.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h
 .\lps\main.o: ../Drivers/CMSIS/Include/core_cm4.h
-.\lps\main.o: D:\Software\Keil\ARM\ARMCC\Bin\..\include\stdint.h
+.\lps\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\lps\main.o: ../Drivers/CMSIS/Include/cmsis_version.h
 .\lps\main.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 .\lps\main.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -15,7 +15,7 @@
 .\lps\main.o: ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-.\lps\main.o: D:\Software\Keil\ARM\ARMCC\Bin\..\include\stddef.h
+.\lps\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc_ex.h
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio.h
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_gpio_ex.h
@@ -34,10 +34,10 @@
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_spi_ex.h
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h
 .\lps\main.o: ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
-.\lps\main.o: D:\Software\Keil\ARM\ARMCC\Bin\..\include\stdio.h
-.\lps\main.o: D:\Software\Keil\ARM\ARMCC\Bin\..\include\string.h
-.\lps\main.o: D:\Software\Keil\ARM\ARMCC\Bin\..\include\stdlib.h
-.\lps\main.o: D:\Software\Keil\ARM\ARMCC\Bin\..\include\math.h
+.\lps\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\lps\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\lps\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\lps\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 .\lps\main.o: ../Core/Inc/spi.h
 .\lps\main.o: ../Core/Inc/main.h
 .\lps\main.o: ../Core/Inc/usart.h
@@ -49,4 +49,4 @@
 .\lps\main.o: ..\LoRa\Inc\sx1280.h
 .\lps\main.o: ../Core/Inc/SEGGER_RTT.h
 .\lps\main.o: ../Core/Inc/../Config/SEGGER_RTT_Conf.h
-.\lps\main.o: D:\Software\Keil\ARM\ARMCC\Bin\..\include\stdarg.h
+.\lps\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h

@@ -29,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include "ranging.h"
 #include "SEGGER_RTT.h"
+#pragma pack(1)
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -98,17 +99,17 @@ void SystemClock_Config(void);
 void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 {
   MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage));
-	p->type=2;
-	p->length=0;
+  p->type=2;
+  p->length=0;
   p->des_addr=2;
-	p->hop_addr=2;
-	p->src_addr=My_addr;
-	p->ttl=0;
-	p->ack=0;
-	p->seq=SEQ;
-	p->hops=0;
-	Mesh_Send(p, NULL, 0);
-  printf("Send success!:%s-end\n", (uint8_t*)p);
+  p->hop_addr=2;
+  p->src_addr=My_addr;
+  p->ttl=0;
+  p->ack=0;
+  p->seq=SEQ;
+  p->hops=0;
+  Mesh_Send(p, NULL, 0);
+  printf("Send:%s-end\n", (uint8_t*)p);
   free(p);
 }
 
@@ -245,16 +246,16 @@ int main(void)
   //   RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
   // }
   
+  //LoRaSetRx();
   HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0x31ffce,0);
   
-  LoRaSetRx();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		HAL_LPTIM1_INT_Callback();
+		//HAL_LPTIM1_INT_Callback();
     switch (DeviceState)
     {
     case DEVICE_MODE_IDLERX:

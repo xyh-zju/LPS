@@ -49,7 +49,7 @@ WaitingNode* add_Waitinglist(uint8_t type, uint16_t seq, uint16_t pseq, uint32_t
 //发送数据包
 void Mesh_Send(MeshPackage* head, char* data, int dataLength){
 	printf("In Mesh_send:\n");
-	uint8_t* p=(uint8_t*)malloc(sizeof(head)+dataLength);
+	uint8_t* p=(uint8_t*)malloc(sizeof(MeshPackage)+dataLength);
 	memcpy(p,head,sizeof(MeshPackage));
 	if(data!=NULL){
 		uint8_t* q=p+sizeof(head);
