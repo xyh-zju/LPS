@@ -96,21 +96,28 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+int count=0;
 void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 {
-  MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage));
-  p->type=2;
-  p->length=0;
-  p->des_addr=2;
-  p->hop_addr=2;
-  p->src_addr=My_addr;
-  p->ttl=0;
-  p->ack=0;
-  p->seq=SEQ;
-  p->hops=0;
-  Mesh_Send(p, NULL, 0);
-  printf("Send:%s-end\n", (uint8_t*)p);
-  free(p);
+  if(count>60){
+    MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage)); //send a transmit package
+    p->type=2;
+    p->length=0;
+    p->des_addr=2;
+    p->hop_addr=2;
+    p->src_addr=My_addr;
+    p->ttl=0;
+    p->ack=0;
+    p->seq=SEQ;
+    p->hops=0;
+    Mesh_Send(p, NULL, 0);
+    //printf("Send:%s-end\n", (uint8_t*)p);
+    free(p);
+    count=0;
+  }
+	else{
+		count++;
+	}
 }
 
 // void HAL_RECV_Callback(void){
@@ -137,6 +144,7 @@ void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 // }
 
 void parse_package(MeshPackage* package){
+	printf("recieved package: ");
   if(package->type==0) //join
   {
     Mesh_Reply_Join(package); //未实现，结点入网申请，是否需要？
@@ -147,6 +155,7 @@ void parse_package(MeshPackage* package){
   }
   else if(package->type==2&&package->hop_addr==My_addr) //转发包
   {
+		printf("transmit package\n");
     if(package->des_addr==My_addr) //收到的是发给自己的包
     {
       Mesh_Reply(package); //进行应答
@@ -229,93 +238,34 @@ int main(void)
   MX_USART2_UART_Init();
   MX_LPTIM1_Init();
   /* USER CODE BEGIN 2 */
-  AliveTxParams.AliveTxInterval = 60;
-  ProcDoneFlag.TxDone =0;
   printf("LoRange| Bulid:%s\n",__DATE__);
   RangingSetParams();
   RangingInitRadio();
   printf("Version:%x\n",SX1280GetFirmwareVersion());
-  // if(LORANGE_ENTITY)
-  // {
-  //   printf("Slave\n");
-  //   RangingInit(SX1280_RADIO_RANGING_ROLE_SLAVE,RangingDemoAddress);
-  // }
-  // else
-  // {
-  //   printf("Master\n");
-  //   RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
-  // }
   
-  //LoRaSetRx();
-  HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0x31ffce,0);
-  
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+  HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xFFFF,0);
+  LoRaSetRx();
   while (1)
   {
-		//HAL_LPTIM1_INT_Callback();
+
     switch (DeviceState)
     {
     case DEVICE_MODE_IDLERX:
       if(RxDoneFlag)
       {
         SX1280GetPayload(RxData, &RxSize, 20);
-				MeshPackage* package=(MeshPackage*)RxData;
-        
-        parse_package(package);//解析包
-
+        printf("Receive%d %s\n",RxSize,RxData);
         RxDoneFlag = 0;
         LoRaSetRx();
-			// 	Mesh_Recieve((char*)RxData, RxSize);
-      //  printf("RT_num=%d\n",EntryNumber);
-			// 	for(int i=0; i<EntryNumber; i++){
-			// 		printf("des:%d, flag:%d, fresh:%d, next:%d, num:%d\n",RouteTable[i]->des_addr, RouteTable[i]->flag, RouteTable[i]->Freshness, RouteTable[i]->next_hop, RouteTable[i]->num_hops);
-			// 	}
       }
       break;
-    case DEVICE_MODE_RANGING:
-      //waiting for ranging
+		case DEVICE_MODE_RANGING:
+			break;
     default:
       break;
     }
-    //
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
-	
-//	for(int i=0; i<10; i++){
-//		MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage));
-//		p->type=0;
-//		p->length=1;
-//		p->dest=i;
-//		p->src=11;
-//		p->ttl=i;
-//		TxLength = sizeof(*p);
-//		LoRaSendData((uint8_t*)p, TxLength);
-//		LoRaSetRx();
-//		uint32_t timer=0;
-//		//uint8_t success_flag=0;
-//		while(timer<=10000000){
-////			if(reply_ip==i) {
-////				success_flag=1;
-////				break;
-////			}
-//			HAL_RECV_Callback();
-//			timer++;
-//		}
-//		//HAL_RECV_Callback();
-//		
-//		if(reply_ip==i) printf("success transmit!");
-//		else {
-//			printf("repeat send des=%d", i--);
-//		}
-//		
-//	}
-	
 }
 
 /**
