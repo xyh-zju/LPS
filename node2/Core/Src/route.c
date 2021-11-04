@@ -33,6 +33,7 @@ void init_Waitinglist(){
 }
 //添加等待任务
 WaitingNode* add_Waitinglist(uint8_t type, uint16_t seq, uint16_t pseq, uint32_t des_addr, uint32_t require_addr, uint8_t* package_stream){
+	printf("Add waiting list: des=%d\n", des_addr);
 	WaitingNode* p=(WaitingNode*)malloc(sizeof(WaitingNode));
 	p->next=Waitinglist->next;
 	p->seq=seq;
@@ -48,7 +49,7 @@ WaitingNode* add_Waitinglist(uint8_t type, uint16_t seq, uint16_t pseq, uint32_t
 }
 //发送数据包
 void Mesh_Send(MeshPackage* head, char* data, int dataLength){
-	printf("In Mesh_send:\n");
+	//printf("In Mesh_send:\n");
 	uint8_t* p=(uint8_t*)malloc(sizeof(head)+dataLength);
 	*p=*(uint8_t*)head;
 	if(data!=NULL){
@@ -56,7 +57,7 @@ void Mesh_Send(MeshPackage* head, char* data, int dataLength){
 		*q=*data; //Assemble message package
 	}
 	LoRaSendData(p, sizeof(head)+dataLength);
-	LoRaSetRx();
+	printf("Mesh_send finish\n");
 }
 //查找路由
 void findRoute_RT(uint32_t des_addr, uint32_t require_addr, uint16_t hops){ //发送路由查找包
@@ -114,6 +115,7 @@ void delete_RT(uint32_t des){
 }
 // 添加路由路径
 void add_RT(uint32_t des, uint32_t nextHop, uint16_t numHops, uint16_t fresh){
+	printf("Add Route: des=%d, hops=%d, next_hop=%d\n", des, numHops, nextHop);
 	RT_Entry* p=get_RT(des);
 	if(p==NULL){ // add
 		RT_Entry* p=(RT_Entry*)malloc(sizeof(RT_Entry));
@@ -237,31 +239,41 @@ uint8_t Mesh_Handle_Reply(MeshPackage* package){
 }
 // 处理广播包
 uint8_t Mesh_Handle_Broadcast(MeshPackage* package){
-	RT_Entry* rt=get_RT(package->des_addr);
-	if(rt!=NULL) //路由表中有信息，无需查找
-	{
-		//回复广播
-		MeshPackage* reply=(MeshPackage*)malloc(sizeof(MeshPackage));
-		reply->type=1;
-		reply->length=0;
-		reply->des_addr=package->hop_addr;
-		reply->hop_addr=package->hop_addr;
-		reply->src_addr=My_addr;
-		reply->ttl=0;
-		reply->ack=package->seq;
-		reply->seq=SEQ;
-		reply->hops=rt->num_hops++;
-		Mesh_Send(reply, NULL, reply->length);
-		free(reply);
+	if(package->des_addr==My_addr){
+		printf("find me\n");
+		//return package
 	}
-	else //需要查找
-	{
-		findRoute_RT(package->des_addr, package->src_addr, package->hops+1);
-		uint8_t* savedpackage=(uint8_t*)malloc(sizeof(MeshPackage)+package->length); //创建数据包流
-		*savedpackage = *(uint8_t*)package;
-		// 添加等待列表
-		add_Waitinglist(1, SEQ, package->seq, 0, package->src_addr, savedpackage);
+	else{
+		RT_Entry* rt=get_RT(package->des_addr);
+		if(rt!=NULL) //路由表中有信息，无需查找
+		{
+			printf("found, reply i can\n");
+			//回复广播
+			MeshPackage* reply=(MeshPackage*)malloc(sizeof(MeshPackage));
+			reply->type=1;
+			reply->length=0;
+			reply->des_addr=package->hop_addr;
+			reply->hop_addr=package->hop_addr;
+			reply->src_addr=My_addr;
+			reply->ttl=0;
+			reply->ack=package->seq;
+			reply->seq=SEQ;
+			reply->hops=rt->num_hops++;
+			Mesh_Send(reply, NULL, reply->length);
+			free(reply);
+		}
+		else //需要查找
+		{
+			HAL_Delay(100);
+			printf("not found, broadcast to finddes=%d, src=%d\n", package->des_addr, package->src_addr);
+			findRoute_RT(package->des_addr, package->src_addr, package->hops+1); //TODO: 无法发出申请
+			uint8_t* savedpackage=(uint8_t*)malloc(sizeof(MeshPackage)+package->length); //创建数据包流
+			*savedpackage = *(uint8_t*)package;
+			// 添加等待列表
+			add_Waitinglist(1, SEQ, package->seq, 0, package->src_addr, savedpackage);
+		}
 	}
+	
 }
 
 uint8_t Mesh_Reply(MeshPackage* package) //回复消息包

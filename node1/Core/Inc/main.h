@@ -53,6 +53,14 @@ enum DemoMode
     MASTER = 0,
     SLAVE
 };
+
+typedef enum
+{
+    DEVICE_MODE_IDLERX                              = 0x00,
+    DEVICE_MODE_TXALIVE,
+    DEVICE_MODE_RANGING,                                                        
+}DeviceStates_t;
+
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

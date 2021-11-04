@@ -53,6 +53,7 @@ uint8_t Mesh_Reply(MeshPackage* package);
 uint8_t Mesh_Handle_Reply(MeshPackage* package);
 uint8_t Mesh_Handle_Broadcast(MeshPackage* package);
 uint8_t Mesh_transmit(MeshPackage* package);
+void findRoute_RT(uint32_t des_addr, uint32_t require_addr, uint16_t hops);
 //int Mesh_RouteFound(uint32_t destination);
 //uint8_t Mesh_Construct(uint32_t destination);
 //uint8_t Mesh_RouteMaintenance();

@@ -136,6 +136,7 @@ void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 // }
 
 void parse_package(MeshPackage* package){
+	printf("Im %d, get package form %d, seq=%d, des=%d, hop=%d, type=%d\n",My_addr, package->src_addr, package->seq, package->des_addr, package->hop_addr, package->type);
   if(package->type==0) //join
   {
     Mesh_Reply_Join(package); //未实现，结点入网申请，是否需要？
@@ -157,16 +158,18 @@ void parse_package(MeshPackage* package){
     }
     else //发给别人的包
     {
+			printf("get transmit to %d\n", package->des_addr);
       Mesh_transmit(package); //进行转发
     }
   }
   else if(package->type==3) //广播查找
   {
+		printf("get broadcast to %d\n", package->des_addr);
     Mesh_Handle_Broadcast(package); //处理广播请求
   }
   else //undefined package
   {
-    printf("Undefined package");
+    printf("Undefined package\n");
   }
 }
 
@@ -247,11 +250,13 @@ int main(void)
   //   RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
   // }
   
-  HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xfffff,0);
-  
+  //HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xfffff,0);
+  init_Route();
   LoRaSetRx();
   /* USER CODE END 2 */
 
+	findRoute_RT(1, 1, 0);
+	printf("sended find\n");
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -261,7 +266,7 @@ int main(void)
     case DEVICE_MODE_IDLERX:
       if(RxDoneFlag)
       {
-        SX1280GetPayload(RxData, &RxSize, 20);
+        SX1280GetPayload(RxData, &RxSize, 100);
 				MeshPackage* package=(MeshPackage*)RxData;
         
         parse_package(package);//解析包
