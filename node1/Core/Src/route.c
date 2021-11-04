@@ -33,6 +33,7 @@ void init_Waitinglist(){
 }
 //添加等待任务
 WaitingNode* add_Waitinglist(uint8_t type, uint16_t seq, uint16_t pseq, uint32_t des_addr, uint32_t require_addr, uint8_t* package_stream){
+	printf("Add waiting list: des=%d\n", des_addr);
 	WaitingNode* p=(WaitingNode*)malloc(sizeof(WaitingNode));
 	p->next=Waitinglist->next;
 	p->seq=seq;
@@ -52,7 +53,7 @@ void Mesh_Send(MeshPackage* head, char* data, int dataLength){
 	uint8_t* p=(uint8_t*)malloc(sizeof(MeshPackage)+dataLength);
 	memcpy(p,head,sizeof(MeshPackage));
 	if(data!=NULL){
-		uint8_t* q=p+sizeof(head);
+		uint8_t* q=p+sizeof(MeshPackage);
 		*q=*data; //Assemble message package
 	}
 	//printf("Create package finish\n");
@@ -116,6 +117,7 @@ void delete_RT(uint32_t des){
 }
 // 添加路由路径
 void add_RT(uint32_t des, uint32_t nextHop, uint16_t numHops, uint16_t fresh){
+	printf("Add Route: des=%d, hops=%d, next_hop=%d\n", des, numHops, nextHop);
 	RT_Entry* p=get_RT(des);
 	if(p==NULL){ // add
 		RT_Entry* p=(RT_Entry*)malloc(sizeof(RT_Entry));
@@ -127,6 +129,7 @@ void add_RT(uint32_t des, uint32_t nextHop, uint16_t numHops, uint16_t fresh){
 		p->next=RTHead->next;
 		RTHead->next=p;
 		EntryNumber++;
+		printf("add success, now route table has %d entrys\n", EntryNumber);
 	}
 	else{
 		if(p->Freshness<fresh){ // update
@@ -213,6 +216,7 @@ uint8_t Mesh_Handle_Reply(MeshPackage* package){
 				add_RT(p->des_addr, package->src_addr, package->hops, 0);
 				if(p->require_addr!=My_addr) //有上家需要回复
 				{
+					printf("Reply the host\n");
 					//回复上家的广播
 					MeshPackage* reply=(MeshPackage*)malloc(sizeof(MeshPackage));
 					reply->type=1;
@@ -224,15 +228,17 @@ uint8_t Mesh_Handle_Reply(MeshPackage* package){
 					reply->ack=p->pseq;
 					reply->seq=p->seq;
 					reply->hops=0;
-					Mesh_Send(reply, NULL, reply->length);
+					Mesh_Send(reply, NULL, sizeof(MeshPackage));
 					free(reply);
 				}
 				if(p->package_stream!=NULL) //有包待转发
 				{
+					printf("transmit waiting package\n");
 					Mesh_transmit((MeshPackage*)p->package_stream);
 					free(p->package_stream);
 				}
 			}
+			break;
 		}
 	}
 	return 0;
@@ -242,6 +248,18 @@ uint8_t Mesh_Handle_Broadcast(MeshPackage* package){
 	if(package->des_addr==My_addr){
 		printf("find me\n");
 		//return package
+		MeshPackage* reply=(MeshPackage*)malloc(sizeof(MeshPackage));
+		reply->type=1;
+		reply->length=0;
+		reply->des_addr=package->hop_addr;
+		reply->hop_addr=My_addr;
+		reply->src_addr=My_addr;
+		reply->ttl=0;
+		reply->ack=package->seq;
+		reply->seq=SEQ;
+		reply->hops=0;
+		Mesh_Send(reply, NULL, reply->length);
+		free(reply);
 	}
 	else{
 		RT_Entry* rt=get_RT(package->des_addr);
@@ -266,13 +284,15 @@ uint8_t Mesh_Handle_Broadcast(MeshPackage* package){
 		{
 			printf("not found, broadcast to find\n");
 			findRoute_RT(package->des_addr, package->src_addr, package->hops+1);
-			uint8_t* savedpackage=(uint8_t*)malloc(sizeof(MeshPackage)+package->length); //创建数据包流
-			*savedpackage = *(uint8_t*)package;
+			uint8_t* savedpackage=NULL;
+			if(package->length>0){
+				savedpackage =(uint8_t*)malloc(sizeof(MeshPackage)+package->length); //创建数据包流
+				memcpy(savedpackage, package, sizeof(MeshPackage)+package->length);
+			}
 			// 添加等待列表
 			add_Waitinglist(1, SEQ, package->seq, 0, package->src_addr, savedpackage);
 		}
 	}
-	
 }
 
 uint8_t Mesh_Reply(MeshPackage* package) //回复消息包
@@ -295,11 +315,9 @@ uint8_t Mesh_transmit(MeshPackage* package)
 {
 	RT_Entry*info= get_RT(package->des_addr);
 	if(info==NULL){ //未找到路由，进行查找
-		printf("Not found rt\n");
 		findRoute_RT(package->des_addr, package->src_addr, package->hops+1);
 		uint8_t* savedpackage=(uint8_t*)malloc(sizeof(MeshPackage)+package->length); //创建数据包流
 		*savedpackage = *(uint8_t*)package;
-		printf("add wait list\n");
 		add_Waitinglist(1, SEQ, package->seq, 0, package->src_addr, savedpackage);
 	}
 	else{ //直接转发

@@ -211,7 +211,7 @@ int main(void)
   //   RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
   // }
   
-  //HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xFFFF,0);
+//  HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xFFFF,0);
 	init_Route();
   LoRaSetRx();
   /* USER CODE END 2 */
@@ -220,6 +220,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	findRoute_RT(1, 1, 0);
 	printf("sended find\n");
+	
   while (1)
   {
     // if(RangingDoneFlag)
@@ -251,7 +252,7 @@ int main(void)
         parse_package(package);//解析包
 
         RxDoneFlag = 0;
-        LoRaSetRx();
+//        LoRaSetRx();
       }
       break;
     default:

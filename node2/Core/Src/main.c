@@ -272,7 +272,7 @@ int main(void)
         parse_package(package);//解析包
 
         RxDoneFlag = 0;
-        LoRaSetRx();
+//        LoRaSetRx();
 			// 	Mesh_Recieve((char*)RxData, RxSize);
       //  printf("RT_num=%d\n",EntryNumber);
 			// 	for(int i=0; i<EntryNumber; i++){
