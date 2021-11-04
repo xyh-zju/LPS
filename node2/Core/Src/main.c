@@ -108,7 +108,7 @@ void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 	p->seq=SEQ;
 	p->hops=0;
 	Mesh_Send(p, NULL, 0);
-  printf("Send success!:%s-end\n", p);
+  //printf("Send success!:%s-end\n", p);
   free(p);
 }
 
@@ -136,35 +136,37 @@ void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 // }
 
 void parse_package(MeshPackage* package){
-	printf("Im %d, get package form %d, seq=%d, des=%d, hop=%d, type=%d\n",My_addr, package->src_addr, package->seq, package->des_addr, package->hop_addr, package->type);
-  if(package->type==0) //join
+	//printf("Im %d, get package form %d, seq=%d, des=%d, hop=%d, type=%d\n",My_addr, package->src_addr, package->seq, package->des_addr, package->hop_addr, package->type);
+	if(package->type==0) //join
   {
+		printf("Im node%d, get JOIN request form node%d, seq=%d, hop=%d\n",My_addr, package->src_addr, package->seq, package->hop_addr);
+
     Mesh_Reply_Join(package); //未实现，结点入网申请，是否需要？
   }
   else if(package->type==1&&package->des_addr==My_addr) //针对自己的应答包
   {
+		printf("Im node%d, get REPLY form node%d, seq=%d, hop=%d\n",My_addr, package->src_addr, package->seq, package->hop_addr);
     Mesh_Handle_Reply(package); //处理应答
   }
   else if(package->type==2&&package->hop_addr==My_addr) //转发包
   {
+		printf("Im node%d, get TRANSMIT request form node%d to node%d, seq=%d, hop=%d\n",My_addr, package->src_addr, package->des_addr, package->seq, package->hop_addr);
     if(package->des_addr==My_addr) //收到的是发给自己的包
     {
-      printf("Get my package from %d, SEQ=%d\n", package->src_addr, package->seq);
-
+      printf("Get message to me!\n");
       Mesh_Reply(package); //进行应答
-      
       //处理数据
 
     }
     else //发给别人的包
     {
-			printf("get transmit to %d\n", package->des_addr);
+			printf("Transmit package to node%d\n", package->des_addr);
       Mesh_transmit(package); //进行转发
     }
   }
   else if(package->type==3) //广播查找
   {
-		printf("get broadcast to %d\n", package->des_addr);
+		printf("Im node%d, get BROADCAST request form node%d to find node%d, seq=%d, hop=%d\n",My_addr, package->src_addr, package->des_addr, package->seq, package->hop_addr);
     Mesh_Handle_Broadcast(package); //处理广播请求
   }
   else //undefined package
@@ -255,8 +257,8 @@ int main(void)
   LoRaSetRx();
   /* USER CODE END 2 */
 
-	findRoute_RT(1, 1, 0);
-	printf("sended find\n");
+	//findRoute_RT(1, 1, 0);
+	//printf("sended find\n");
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)

@@ -24,6 +24,7 @@
 #include "usart.h"
 #include "gpio.h"
 #include "route.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "ranging.h"
@@ -33,14 +34,16 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-DeviceStates_t DeviceState=DEVICE_MODE_IDLERX;
-/* USER CODE END PTD */
 extern int EntryNumber;
 extern int RTindex[];
 extern RT_Entry* RouteTable[];
 extern uint32_t reply_ip;
 extern uint32_t My_addr;
 extern uint16_t SEQ;
+
+DeviceStates_t DeviceState=DEVICE_MODE_IDLERX;
+/* USER CODE END PTD */
+
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define LORANGE_ENTITY MASTER
@@ -62,9 +65,23 @@ uint8_t RxData[20];
 uint8_t RxSize = 1;
 uint32_t TxTimestamp;
 uint8_t TxLength;
-uint8_t TxData[10]="aassaappqq";
+uint8_t* TxData;
 uint8_t LPTIM1Count = 0;
 char RTT_UpBuffer[4096];
+struct
+{
+  uint8_t AliveTxInterval;
+}AliveTxParams;
+struct
+{
+  uint8_t TxDone;
+}ProcDoneFlag;
+typedef struct 
+{
+  uint32_t ID;
+  uint32_t LastSeen;
+}RouteTableElement_t;
+
 struct{
   int distance;
 }RTT_Value;
@@ -78,32 +95,89 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void HAL_LPTIM1_INT_Callback(void)
+void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 {
-  HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_4);
-  LPTIM1Count++;
-  if(LPTIM1Count>10)
+  MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage));
+	p->type=2;
+	p->length=0;
+  p->des_addr=2;
+	p->hop_addr=2;
+	p->src_addr=My_addr;
+	p->ttl=0;
+	p->ack=0;
+	p->seq=SEQ;
+	p->hops=0;
+	Mesh_Send(p, NULL, 0);
+  //printf("Send success!:%s-end\n", p);
+  free(p);
+}
+
+// void HAL_RECV_Callback(void){
+// 	switch (DeviceState)
+//     {
+//     case DEVICE_MODE_IDLERX:
+//       if(RxDoneFlag)
+//       {
+//         SX1280GetPayload(RxData, &RxSize, 20);
+// 				MeshPackage* p=(MeshPackage*)RxData;
+// 				Mesh_Recieve((char*)RxData, RxSize);
+// //        printf("RT_num=%d\n",EntryNumber);
+// //				for(int i=0; i<EntryNumber; i++){
+// //					printf("des:%d, flag:%d, fresh:%d, next:%d, num:%d\n",RouteTable[i]->des_addr, RouteTable[i]->flag, RouteTable[i]->Freshness, RouteTable[i]->next_hop, RouteTable[i]->num_hops);
+// //				}
+
+//         RxDoneFlag = 0;
+//         LoRaSetRx();
+//       }
+//       break;
+//     default:
+//       break;
+//     }
+// }
+
+void parse_package(MeshPackage* package){
+	//printf("Im %d, get package form %d, seq=%d, des=%d, hop=%d, type=%d\n",My_addr, package->src_addr, package->seq, package->des_addr, package->hop_addr, package->type);
+	if(package->type==0) //join
   {
-    MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage));
-		p->type=2;
-		p->length=0;
-		p->des_addr=1;
-		p->hop_addr=2;
-		p->src_addr=My_addr;
-		p->ttl=1;
-		p->ack=0;
-		p->seq=SEQ++;
-		p->hops=0;
-		Mesh_transmit(p);
-//		LoRaSendData((uint8_t*)p, sizeof(MeshPackage));
-//		printf("Send success!:%d-end\n", p->seq);
-		free(p);
-    LPTIM1Count = 0;
+		printf("Im node%d, get JOIN request form node%d, seq=%d, hop=%d\n",My_addr, package->src_addr, package->seq, package->hop_addr);
+
+    Mesh_Reply_Join(package); //未实现，结点入网申请，是否需要？
+  }
+  else if(package->type==1&&package->des_addr==My_addr) //针对自己的应答包
+  {
+		printf("Im node%d, get REPLY form node%d, seq=%d, hop=%d\n",My_addr, package->src_addr, package->seq, package->hop_addr);
+    Mesh_Handle_Reply(package); //处理应答
+  }
+  else if(package->type==2&&package->hop_addr==My_addr) //转发包
+  {
+		printf("Im node%d, get TRANSMIT request form node%d to node%d, seq=%d, hop=%d\n",My_addr, package->src_addr, package->des_addr, package->seq, package->hop_addr);
+    if(package->des_addr==My_addr) //收到的是发给自己的包
+    {
+      printf("Get message to me!\n");
+      Mesh_Reply(package); //进行应答
+      //处理数据
+
+    }
+    else //发给别人的包
+    {
+			printf("Transmit package to node%d\n", package->des_addr);
+      Mesh_transmit(package); //进行转发
+    }
+  }
+  else if(package->type==3) //广播查找
+  {
+		printf("Im node%d, get BROADCAST request form node%d to find node%d, seq=%d, hop=%d\n",My_addr, package->src_addr, package->des_addr, package->seq, package->hop_addr);
+    Mesh_Handle_Broadcast(package); //处理广播请求
+  }
+  else //undefined package
+  {
+    printf("Undefined package\n");
   }
 }
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  if(GPIO_Pin == GPIO_PIN_4)//Ranging Interrupt
+  if(GPIO_Pin == GPIO_PIN_4)//SX1280 Interrupt
   {
     SX1280_PacketStatus_t *pktStatus;
     SX1280GetPacketStatus(pktStatus);
@@ -114,6 +188,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         DeviceState = DEVICE_MODE_IDLERX; 
         LoRaSetRx();
         printf("TxDone %d \n",TxTimestamp);
+        ProcDoneFlag.TxDone = 1;
     }
     if((IrqStatus & SX1280_IRQ_RX_DONE) == SX1280_IRQ_RX_DONE)
     {
@@ -127,43 +202,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   }
 }
 /* USER CODE END 0 */
-void parse_package(MeshPackage* package){
-	printf("Im %d, get package form %d, seq=%d, des=%d, hop=%d, type=%d\n",My_addr, package->src_addr, package->seq, package->des_addr, package->hop_addr, package->type);
-  if(package->type==0) //join
-  {
-    Mesh_Reply_Join(package); //未实现，结点入网申请，是否需要？
-  }
-  else if(package->type==1&&package->des_addr==My_addr) //针对自己的应答包
-  {
-    Mesh_Handle_Reply(package); //处理应答
-  }
-  else if(package->type==2&&package->hop_addr==My_addr) //转发包
-  {
-    if(package->des_addr==My_addr) //收到的是发给自己的包
-    {
-      printf("Get my package from %d, SEQ=%d\n", package->src_addr, package->seq);
 
-      Mesh_Reply(package); //进行应答
-      
-      //处理数据
-
-    }
-    else //发给别人的包
-    {
-			printf("get transmit to %d\n", package->des_addr);
-      Mesh_transmit(package); //进行转发
-    }
-  }
-  else if(package->type==3) //广播查找
-  {
-		printf("get broadcast to %d\n", package->des_addr);
-    Mesh_Handle_Broadcast(package); //处理广播请求
-  }
-  else //undefined package
-  {
-    printf("Undefined package\n");
-  }
-}
 /**
   * @brief  The application entry point.
   * @retval int
@@ -196,6 +235,8 @@ int main(void)
   MX_USART2_UART_Init();
   MX_LPTIM1_Init();
   /* USER CODE BEGIN 2 */
+  AliveTxParams.AliveTxInterval = 60;
+  ProcDoneFlag.TxDone =0;
   printf("LoRange| Bulid:%s\n",__DATE__);
   RangingSetParams();
   RangingInitRadio();
@@ -211,36 +252,17 @@ int main(void)
   //   RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
   // }
   
-//  HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xFFFF,0);
-	init_Route();
+  //HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xfffff,0);
+  init_Route();
   LoRaSetRx();
   /* USER CODE END 2 */
 
+	findRoute_RT(1, 1, 0);
+	//printf("sended find\n");
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	findRoute_RT(1, 1, 0);
-	printf("sended find\n");
-	
   while (1)
   {
-    // if(RangingDoneFlag)
-    // {
-    //   if(LORANGE_ENTITY)//slave
-    //   {
-    //     RangingInit(SX1280_RADIO_RANGING_ROLE_SLAVE,RangingDemoAddress);
-    //   }
-    //   else//master
-    //   {
-    //     distance = SX1280GetRangingResult(SX1280_RANGING_RESULT_RAW);
-    //     printf("distance is : %.2lfm\n",distance);
-    //     RTT_Value.distance = distance * 10;
-    //     SEGGER_RTT_Write(1,&RTT_Value,sizeof(RTT_Value));
-    //     HAL_Delay(10);
-    //     RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
-    //   }
-    //   RangingDoneFlag = 0;
-    // }
-
     switch (DeviceState)
     {
     case DEVICE_MODE_IDLERX:
@@ -253,8 +275,15 @@ int main(void)
 
         RxDoneFlag = 0;
 //        LoRaSetRx();
+			// 	Mesh_Recieve((char*)RxData, RxSize);
+      //  printf("RT_num=%d\n",EntryNumber);
+			// 	for(int i=0; i<EntryNumber; i++){
+			// 		printf("des:%d, flag:%d, fresh:%d, next:%d, num:%d\n",RouteTable[i]->des_addr, RouteTable[i]->flag, RouteTable[i]->Freshness, RouteTable[i]->next_hop, RouteTable[i]->num_hops);
+			// 	}
       }
       break;
+    case DEVICE_MODE_RANGING:
+      //waiting for ranging
     default:
       break;
     }
@@ -264,6 +293,36 @@ int main(void)
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
+	
+//	for(int i=0; i<10; i++){
+//		MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage));
+//		p->type=0;
+//		p->length=1;
+//		p->dest=i;
+//		p->src=11;
+//		p->ttl=i;
+//		TxLength = sizeof(*p);
+//		LoRaSendData((uint8_t*)p, TxLength);
+//		LoRaSetRx();
+//		uint32_t timer=0;
+//		//uint8_t success_flag=0;
+//		while(timer<=10000000){
+////			if(reply_ip==i) {
+////				success_flag=1;
+////				break;
+////			}
+//			HAL_RECV_Callback();
+//			timer++;
+//		}
+//		//HAL_RECV_Callback();
+//		
+//		if(reply_ip==i) printf("success transmit!");
+//		else {
+//			printf("repeat send des=%d", i--);
+//		}
+//		
+//	}
+	
 }
 
 /**

@@ -3,11 +3,11 @@
 
 #include <stdint.h>
 
-//typedef enum
-//{
-//    DEVICE_MODE_IDLERX                              = 0x00,
-//    DEVICE_MODE_RANGING,                                                        
-//}DeviceStates_t;
+typedef enum
+{
+    DEVICE_MODE_IDLERX                              = 0x00,
+    DEVICE_MODE_RANGING,                                                        
+}DeviceStates_t;
 
 typedef struct WAITING{
     uint8_t type; //1 for broadcasting find route, 2 for transmit

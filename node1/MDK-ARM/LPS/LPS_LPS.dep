@@ -12,8 +12,8 @@ I (../Core/Inc/SEGGER_RTT.h)(0x61828032)
 I (../Core/Inc/../Config/SEGGER_RTT_Conf.h)(0x61828032)
 I (D:\Software\Keil\ARM\ARMCC\include\stdlib.h)(0x60252374)
 I (D:\Software\Keil\ARM\ARMCC\include\stdarg.h)(0x60252376)
-F (../Core/Src/main.c)(0x61837BA5)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ..\LoRa\Inc -I ..\LoRa\Inc\rangingCorrection -I ..\Core\Config-I.\RTE\_LPS-ID:\Software\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-ID:\Software\Packs\Keil\STM32L4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32L476xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32L476xx-o .\lps\main.o --omf_browse .\lps\main.crf --depend .\lps\main.d)
-I (../Core/Inc/main.h)(0x61828922)
+F (../Core/Src/main.c)(0x618407DE)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ..\LoRa\Inc -I ..\LoRa\Inc\rangingCorrection -I ..\Core\Config-I.\RTE\_LPS-ID:\Software\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-ID:\Software\Packs\Keil\STM32L4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32L476xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32L476xx-o .\lps\main.o --omf_browse .\lps\main.crf --depend .\lps\main.d)
+I (../Core/Inc/main.h)(0x6184081C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x61828034)
 I (../Core/Inc/stm32l4xx_hal_conf.h)(0x61828032)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x61828034)
@@ -55,7 +55,7 @@ I (../Core/Inc/spi.h)(0x61828032)
 I (../Core/Inc/usart.h)(0x61828032)
 I (../Core/Inc/gpio.h)(0x61828032)
 I (../Core/Inc/lptim.h)(0x61828032)
-I (../Core/Inc/route.h)(0x6182BB02)
+I (../Core/Inc/route.h)(0x618407DF)
 I (..\LoRa\Inc\ranging.h)(0x61828034)
 I (..\LoRa\Inc\sx1280-hal.h)(0x61828034)
 I (..\LoRa\Inc\sx1280.h)(0x61828034)
@@ -64,7 +64,7 @@ I (../Core/Inc/../Config/SEGGER_RTT_Conf.h)(0x61828032)
 I (D:\Software\Keil\ARM\ARMCC\include\stdarg.h)(0x60252376)
 F (../Core/Src/gpio.c)(0x61828032)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ..\LoRa\Inc -I ..\LoRa\Inc\rangingCorrection -I ..\Core\Config-I.\RTE\_LPS-ID:\Software\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-ID:\Software\Packs\Keil\STM32L4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32L476xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32L476xx-o .\lps\gpio.o --omf_browse .\lps\gpio.crf --depend .\lps\gpio.d)
 I (../Core/Inc/gpio.h)(0x61828032)
-I (../Core/Inc/main.h)(0x61828922)
+I (../Core/Inc/main.h)(0x6184081C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x61828034)
 I (../Core/Inc/stm32l4xx_hal_conf.h)(0x61828032)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x61828034)
@@ -106,7 +106,7 @@ I (../Core/Inc/spi.h)(0x61828032)
 I (../Core/Inc/usart.h)(0x61828032)
 F (../Core/Src/lptim.c)(0x61828032)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ..\LoRa\Inc -I ..\LoRa\Inc\rangingCorrection -I ..\Core\Config-I.\RTE\_LPS-ID:\Software\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-ID:\Software\Packs\Keil\STM32L4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32L476xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32L476xx-o .\lps\lptim.o --omf_browse .\lps\lptim.crf --depend .\lps\lptim.d)
 I (../Core/Inc/lptim.h)(0x61828032)
-I (../Core/Inc/main.h)(0x61828922)
+I (../Core/Inc/main.h)(0x6184081C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x61828034)
 I (../Core/Inc/stm32l4xx_hal_conf.h)(0x61828032)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x61828034)
@@ -149,7 +149,7 @@ I (../Core/Inc/usart.h)(0x61828032)
 I (../Core/Inc/gpio.h)(0x61828032)
 F (../Core/Src/spi.c)(0x61828032)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ..\LoRa\Inc -I ..\LoRa\Inc\rangingCorrection -I ..\Core\Config-I.\RTE\_LPS-ID:\Software\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-ID:\Software\Packs\Keil\STM32L4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32L476xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32L476xx-o .\lps\spi.o --omf_browse .\lps\spi.crf --depend .\lps\spi.d)
 I (../Core/Inc/spi.h)(0x61828032)
-I (../Core/Inc/main.h)(0x61828922)
+I (../Core/Inc/main.h)(0x6184081C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x61828034)
 I (../Core/Inc/stm32l4xx_hal_conf.h)(0x61828032)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x61828034)
@@ -191,7 +191,7 @@ I (../Core/Inc/usart.h)(0x61828032)
 I (../Core/Inc/gpio.h)(0x61828032)
 F (../Core/Src/usart.c)(0x61828032)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ..\LoRa\Inc -I ..\LoRa\Inc\rangingCorrection -I ..\Core\Config-I.\RTE\_LPS-ID:\Software\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-ID:\Software\Packs\Keil\STM32L4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32L476xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32L476xx-o .\lps\usart.o --omf_browse .\lps\usart.crf --depend .\lps\usart.d)
 I (../Core/Inc/usart.h)(0x61828032)
-I (../Core/Inc/main.h)(0x61828922)
+I (../Core/Inc/main.h)(0x6184081C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x61828034)
 I (../Core/Inc/stm32l4xx_hal_conf.h)(0x61828032)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x61828034)
@@ -232,7 +232,7 @@ I (D:\Software\Keil\ARM\ARMCC\include\math.h)(0x60252378)
 I (../Core/Inc/spi.h)(0x61828032)
 I (../Core/Inc/gpio.h)(0x61828032)
 F (../Core/Src/stm32l4xx_it.c)(0x61828032)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ..\LoRa\Inc -I ..\LoRa\Inc\rangingCorrection -I ..\Core\Config-I.\RTE\_LPS-ID:\Software\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-ID:\Software\Packs\Keil\STM32L4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32L476xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32L476xx-o .\lps\stm32l4xx_it.o --omf_browse .\lps\stm32l4xx_it.crf --depend .\lps\stm32l4xx_it.d)
-I (../Core/Inc/main.h)(0x61828922)
+I (../Core/Inc/main.h)(0x6184081C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x61828034)
 I (../Core/Inc/stm32l4xx_hal_conf.h)(0x61828032)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x61828034)
@@ -275,7 +275,7 @@ I (../Core/Inc/usart.h)(0x61828032)
 I (../Core/Inc/gpio.h)(0x61828032)
 I (../Core/Inc/stm32l4xx_it.h)(0x61828032)
 F (../Core/Src/stm32l4xx_hal_msp.c)(0x61828032)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ..\LoRa\Inc -I ..\LoRa\Inc\rangingCorrection -I ..\Core\Config-I.\RTE\_LPS-ID:\Software\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-ID:\Software\Packs\Keil\STM32L4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32L476xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32L476xx-o .\lps\stm32l4xx_hal_msp.o --omf_browse .\lps\stm32l4xx_hal_msp.crf --depend .\lps\stm32l4xx_hal_msp.d)
-I (../Core/Inc/main.h)(0x61828922)
+I (../Core/Inc/main.h)(0x6184081C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x61828034)
 I (../Core/Inc/stm32l4xx_hal_conf.h)(0x61828032)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x61828034)
@@ -1100,7 +1100,7 @@ I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h)(0x61828034)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h)(0x61828034)
 F (..\LoRa\Src\ranging.c)(0x61828034)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\Core\Inc -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ..\LoRa\Inc -I ..\LoRa\Inc\rangingCorrection -I ..\Core\Config-I.\RTE\_LPS-ID:\Software\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-ID:\Software\Packs\Keil\STM32L4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32L476xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32L476xx-o .\lps\ranging.o --omf_browse .\lps\ranging.crf --depend .\lps\ranging.d)
 I (..\LoRa\Inc\ranging.h)(0x61828034)
-I (..\Core\Inc\main.h)(0x61828922)
+I (..\Core\Inc\main.h)(0x6184081C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x61828034)
 I (..\Core\Inc\stm32l4xx_hal_conf.h)(0x61828032)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x61828034)
@@ -1145,7 +1145,7 @@ I (..\LoRa\Inc\sx1280-hal.h)(0x61828034)
 I (..\LoRa\Inc\sx1280.h)(0x61828034)
 F (..\LoRa\Src\sx1280.c)(0x61828034)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\Core\Inc -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ..\LoRa\Inc -I ..\LoRa\Inc\rangingCorrection -I ..\Core\Config-I.\RTE\_LPS-ID:\Software\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-ID:\Software\Packs\Keil\STM32L4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32L476xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32L476xx-o .\lps\sx1280.o --omf_browse .\lps\sx1280.crf --depend .\lps\sx1280.d)
 I (..\LoRa\Inc\sx1280.h)(0x61828034)
-I (..\Core\Inc\main.h)(0x61828922)
+I (..\Core\Inc\main.h)(0x6184081C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x61828034)
 I (..\Core\Inc\stm32l4xx_hal_conf.h)(0x61828032)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x61828034)
@@ -1209,7 +1209,7 @@ I (..\LoRa\Inc\rangingCorrection/rangingCorrectionSF9BW1600.h)(0x61828034)
 I (..\LoRa\Inc\rangingCorrection/rangingCorrectionSF10BW1600.h)(0x61828034)
 F (..\LoRa\Src\sx1280-hal.c)(0x61828034)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\Core\Inc -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ..\LoRa\Inc -I ..\LoRa\Inc\rangingCorrection -I ..\Core\Config-I.\RTE\_LPS-ID:\Software\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-ID:\Software\Packs\Keil\STM32L4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32L476xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32L476xx-o .\lps\sx1280-hal.o --omf_browse .\lps\sx1280-hal.crf --depend .\lps\sx1280-hal.d)
 I (..\LoRa\Inc\sx1280-hal.h)(0x61828034)
-I (..\Core\Inc\main.h)(0x61828922)
+I (..\Core\Inc\main.h)(0x6184081C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x61828034)
 I (..\Core\Inc\stm32l4xx_hal_conf.h)(0x61828032)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x61828034)
@@ -1251,10 +1251,10 @@ I (..\Core\Inc\spi.h)(0x61828032)
 I (..\Core\Inc\usart.h)(0x61828032)
 I (..\Core\Inc\gpio.h)(0x61828032)
 I (..\LoRa\Inc\sx1280.h)(0x61828034)
-F (..\Core\Src\route.c)(0x61838DDF)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\Core\Inc -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ..\LoRa\Inc -I ..\LoRa\Inc\rangingCorrection -I ..\Core\Config-I.\RTE\_LPS-ID:\Software\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-ID:\Software\Packs\Keil\STM32L4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32L476xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32L476xx-o .\lps\route.o --omf_browse .\lps\route.crf --depend .\lps\route.d)
-I (..\Core\Inc\route.h)(0x6182BB02)
+F (..\Core\Src\route.c)(0x61840BDE)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\Core\Inc -I ../Core/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc -I ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I ../Drivers/CMSIS/Include -I ..\LoRa\Inc -I ..\LoRa\Inc\rangingCorrection -I ..\Core\Config-I.\RTE\_LPS-ID:\Software\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-ID:\Software\Packs\Keil\STM32L4xx_DFP\2.6.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32L476xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32L476xx-o .\lps\route.o --omf_browse .\lps\route.crf --depend .\lps\route.d)
+I (..\Core\Inc\route.h)(0x618407DF)
 I (D:\Software\Keil\ARM\ARMCC\include\stdint.h)(0x6025237E)
-I (..\Core\Inc\main.h)(0x61828922)
+I (..\Core\Inc\main.h)(0x6184081C)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h)(0x61828034)
 I (..\Core\Inc\stm32l4xx_hal_conf.h)(0x61828032)
 I (../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h)(0x61828034)
