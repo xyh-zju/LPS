@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\LPS\LPS.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\LPS\LPS.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Nov 05 00:18:45 2021
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Nov 05 17:54:49 2021
 <BR><P>
 <H3>Maximum Stack Usage =        360 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -395,8 +395,10 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[bf]"></a>__aeabi_memcpy</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, memcpya.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Send
+<BR><BR>[Called By]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_transmit
+<LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Send
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Handle_Broadcast
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_package
 <LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SX1280HalReadRegisters
 <LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SX1280HalWriteCommand
 <LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SX1280HalWriteBuffer
@@ -1107,10 +1109,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_package
 </UL>
 
-<P><STRONG><a name="[88]"></a>Mesh_Send</STRONG> (Thumb, 58 bytes, Stack size 24 bytes, route.o(i.Mesh_Send))
+<P><STRONG><a name="[88]"></a>Mesh_Send</STRONG> (Thumb, 68 bytes, Stack size 24 bytes, route.o(i.Mesh_Send))
 <BR><BR>[Stack]<UL><LI>Max Depth = 240<LI>Call Chain = Mesh_Send &rArr; LoRaSendData &rArr; SX1280SendPayload &rArr; SX1280SetTx &rArr; SX1280ClearIrqStatus &rArr; SX1280HalWriteCommand &rArr; SpiIn &rArr; HAL_SPI_Transmit &rArr; SPI_EndRxTxTransaction &rArr; SPI_WaitFlagStateUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
+<LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 <LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 <LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LoRaSendData
 </UL>
@@ -1122,12 +1125,13 @@ Global Symbols
 <LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;findRoute_RT
 </UL>
 
-<P><STRONG><a name="[c3]"></a>Mesh_transmit</STRONG> (Thumb, 100 bytes, Stack size 24 bytes, route.o(i.Mesh_transmit))
+<P><STRONG><a name="[c3]"></a>Mesh_transmit</STRONG> (Thumb, 124 bytes, Stack size 24 bytes, route.o(i.Mesh_transmit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 288<LI>Call Chain = Mesh_transmit &rArr; findRoute_RT &rArr; Mesh_Send &rArr; LoRaSendData &rArr; SX1280SendPayload &rArr; SX1280SetTx &rArr; SX1280ClearIrqStatus &rArr; SX1280HalWriteCommand &rArr; SpiIn &rArr; HAL_SPI_Transmit &rArr; SPI_EndRxTxTransaction &rArr; SPI_WaitFlagStateUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Send
 <LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_RT
 <LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;findRoute_RT
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;add_Waitinglist
@@ -1555,6 +1559,7 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = __2printf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_transmit
+<LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Send
 <LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Reply
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Handle_Reply
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Handle_Broadcast
@@ -1713,6 +1718,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Reply
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Handle_Reply
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Handle_Broadcast
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_package
 <LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_LPTIM1_INT_Callback
 <LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;findRoute_RT
 </UL>
@@ -1777,6 +1783,7 @@ Global Symbols
 <LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Reply
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Handle_Reply
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Handle_Broadcast
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse_package
 <LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_LPTIM1_INT_Callback
 <LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;init_Waitinglist
 <LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;init_RT
@@ -1785,15 +1792,18 @@ Global Symbols
 <LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;add_RT
 </UL>
 
-<P><STRONG><a name="[fe]"></a>parse_package</STRONG> (Thumb, 198 bytes, Stack size 16 bytes, main.o(i.parse_package))
-<BR><BR>[Stack]<UL><LI>Max Depth = 328<LI>Call Chain = parse_package &rArr; Mesh_Handle_Reply &rArr; Mesh_transmit &rArr; findRoute_RT &rArr; Mesh_Send &rArr; LoRaSendData &rArr; SX1280SendPayload &rArr; SX1280SetTx &rArr; SX1280ClearIrqStatus &rArr; SX1280HalWriteCommand &rArr; SpiIn &rArr; HAL_SPI_Transmit &rArr; SPI_EndRxTxTransaction &rArr; SPI_WaitFlagStateUntilTimeout
+<P><STRONG><a name="[fe]"></a>parse_package</STRONG> (Thumb, 266 bytes, Stack size 32 bytes, main.o(i.parse_package))
+<BR><BR>[Stack]<UL><LI>Max Depth = 344<LI>Call Chain = parse_package &rArr; Mesh_Handle_Reply &rArr; Mesh_transmit &rArr; findRoute_RT &rArr; Mesh_Send &rArr; LoRaSendData &rArr; SX1280SendPayload &rArr; SX1280SetTx &rArr; SX1280ClearIrqStatus &rArr; SX1280HalWriteCommand &rArr; SpiIn &rArr; HAL_SPI_Transmit &rArr; SPI_EndRxTxTransaction &rArr; SPI_WaitFlagStateUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_transmit
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Reply_Join
 <LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Reply
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Handle_Reply
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mesh_Handle_Broadcast
+<LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;malloc
+<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;free
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
+<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 </UL>
 <BR>[Called By]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>

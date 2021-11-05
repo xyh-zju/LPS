@@ -49,15 +49,14 @@ WaitingNode* add_Waitinglist(uint8_t type, uint16_t seq, uint16_t pseq, uint32_t
 }
 //发送数据包
 void Mesh_Send(MeshPackage* head, char* data, int dataLength){
-	//printf("In Mesh_send:\n");
-	uint8_t* p=(uint8_t*)malloc(sizeof(MeshPackage)+dataLength);
-	memcpy(p,head,sizeof(MeshPackage));
+	printf("In Mesh_send: send data = %s\n", data);
+	char* p=(char*)malloc(sizeof(MeshPackage)+dataLength);
+	memcpy(p ,head,sizeof(MeshPackage));
 	if(data!=NULL){
-		uint8_t* q=p+sizeof(MeshPackage);
-		*q=*data; //Assemble message package
+		memcpy(p+sizeof(MeshPackage) ,data, dataLength);
 	}
 	//printf("Create package finish\n");
-	LoRaSendData(p, sizeof(MeshPackage)+dataLength);
+	LoRaSendData((uint8_t*)p, sizeof(MeshPackage)+dataLength);
 	//printf("Send finish\n");
 	//LoRaSetRx();
 }
@@ -74,7 +73,7 @@ void findRoute_RT(uint32_t des_addr, uint32_t require_addr, uint16_t hops){ //�
 	p->ack=0;
 	p->seq=SEQ; //each waiting package must have a unique seq
 	p->hops=hops;
-	Mesh_Send(p, NULL, 0);
+	Mesh_Send(p, NULL, p->length);
 	free(p);
 }
 // 初始化路由表
@@ -195,7 +194,7 @@ uint8_t Mesh_Reply_Join(MeshPackage* package){
 	p->ack=package->seq;
 	p->seq=package->seq;
 	p->hops=0;
-	Mesh_Send(p, NULL, 0);
+	Mesh_Send(p, NULL, p->length);
 }
 // 处理回复请求
 uint8_t Mesh_Handle_Reply(MeshPackage* package){
@@ -231,7 +230,7 @@ uint8_t Mesh_Handle_Reply(MeshPackage* package){
 					reply->ack=p->pseq;
 					reply->seq=p->seq;
 					reply->hops=0;
-					Mesh_Send(reply, NULL, sizeof(MeshPackage));
+					Mesh_Send(reply, NULL, reply->length);
 					free(reply);
 				}
 				if(p->package_stream!=NULL) //有包待转发
@@ -320,16 +319,17 @@ uint8_t Mesh_transmit(MeshPackage* package)
 	
 	RT_Entry*info= get_RT(package->des_addr);
 	if(info==NULL){ //未找到路由，进行查找
+		printf("Not find route to node%d, start find route\n", package->des_addr);
 		findRoute_RT(package->des_addr, package->src_addr, package->hops+1);
 		uint8_t* savedpackage=(uint8_t*)malloc(sizeof(MeshPackage)+package->length); //创建数据包流
-		*savedpackage = *(uint8_t*)package;
-		add_Waitinglist(1, SEQ, package->seq, 0, package->src_addr, savedpackage);
+		memcpy(savedpackage, (char*)package, sizeof(MeshPackage)+package->length);
+		add_Waitinglist(1, SEQ, package->seq, package->des_addr, package->src_addr, savedpackage);
 	}
 	else{ //直接转发
-		printf("Transmit message from node%d to node%d\n", package->src_addr, package->des_addr);
+		printf("Transmit message from node%d to node%d, message=%s\n", package->src_addr, package->des_addr, (char*)package+sizeof(MeshPackage));
 		package->hop_addr=info->next_hop;
 		package->hops++;
-		Mesh_Send(package, (char* )(package+sizeof(MeshPackage)), package->length);
+		Mesh_Send(package, ((char*)package+sizeof(MeshPackage)), package->length);
 	}
 }
 // 初始化路由表

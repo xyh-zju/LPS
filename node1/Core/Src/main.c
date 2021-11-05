@@ -107,7 +107,7 @@ void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 	p->ack=0;
 	p->seq=SEQ;
 	p->hops=0;
-	Mesh_Send(p, NULL, 0);
+	Mesh_Send(p, NULL, p->length);
   //printf("Send success!:%s-end\n", p);
   free(p);
 }
@@ -136,7 +136,7 @@ void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 // }
 
 void parse_package(MeshPackage* package){
-	//printf("Im %d, get package form %d, seq=%d, des=%d, hop=%d, type=%d\n",My_addr, package->src_addr, package->seq, package->des_addr, package->hop_addr, package->type);
+	printf("Im %d, get package form %d, seq=%d, des=%d, hop=%d, type=%d\n",My_addr, package->src_addr, package->seq, package->des_addr, package->hop_addr, package->type);
 	if(package->type==0) //join
   {
 		printf("Im node%d, get JOIN request form node%d, seq=%d, hop=%d\n",My_addr, package->src_addr, package->seq, package->hop_addr);
@@ -156,7 +156,11 @@ void parse_package(MeshPackage* package){
       printf("Get message to me!\n");
       Mesh_Reply(package); //进行应答
       //处理数据
-
+			char tmp[package->length];
+			memcpy(tmp, (char*)package+sizeof(MeshPackage), package->length);
+			tmp[5]='\0';
+			printf("==>Recieved package from node%d, message: %s\n", package->src_addr, tmp);
+			//
     }
     else //发给别人的包
     {
@@ -257,8 +261,24 @@ int main(void)
   LoRaSetRx();
   /* USER CODE END 2 */
 
-	findRoute_RT(1, 1, 0);
-	//printf("sended find\n");
+	//findRoute_RT(1, 1, 0);
+	
+	MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage)+6);
+	p->type=2;
+	p->length=6;
+  p->des_addr=2;
+	p->hop_addr=2;
+	p->src_addr=My_addr;
+	p->ttl=0;
+	p->ack=0;
+	p->seq=SEQ;
+	p->hops=0;
+	char tmp[6]="hello";
+	memcpy((char*)p+sizeof(MeshPackage), tmp, 6);
+	Mesh_Send(p, (char*)p+sizeof(MeshPackage), p->length);
+  //printf("Send success!:%s-end\n", p);
+  free(p);
+	
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
