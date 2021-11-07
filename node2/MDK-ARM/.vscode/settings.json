@@ -16,6 +16,7 @@
         "cstddef": "c",
         "type_traits": "c",
         "xutility": "c",
-        "route.h": "c"
+        "route.h": "c",
+        "lptim.h": "c"
     }
 }

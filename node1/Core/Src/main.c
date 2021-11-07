@@ -97,21 +97,14 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 void HAL_LPTIM1_INT_Callback(void) //waiting list resend
 {
-  MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage));
-	p->type=2;
-	p->length=0;
-  p->des_addr=2;
-	p->hop_addr=2;
-	p->src_addr=My_addr;
-	p->ttl=0;
-	p->ack=0;
-	p->seq=SEQ;
-	p->hops=0;
-	Mesh_Send(p, NULL, p->length);
-  //printf("Send success!:%s-end\n", p);
-  free(p);
+	static int count=0;
+	if(count>5){	
+	printf("RESEND\n");
+  Resend_Waintinglist();
+	count=0;
+	}
+	else count++;
 }
-
 // void HAL_RECV_Callback(void){
 // 	switch (DeviceState)
 //     {
@@ -148,20 +141,20 @@ void parse_package(MeshPackage* package){
 		printf("Im node%d, get REPLY form node%d, seq=%d, hop=%d\n",My_addr, package->src_addr, package->seq, package->hop_addr);
     Mesh_Handle_Reply(package); //处理应答
   }
-  else if(package->type==2&&package->hop_addr==My_addr) //转发包
+  else if(package->hop_addr==My_addr) //转发包
   {
 		printf("Im node%d, get TRANSMIT request form node%d to node%d, seq=%d, hop=%d\n",My_addr, package->src_addr, package->des_addr, package->seq, package->hop_addr);
-    if(package->des_addr==My_addr) //收到的是发给自己的包
+    if(package->type==2&&package->des_addr==My_addr) //收到的是发给自己的包
     {
       printf("Get message to me!\n");
       Mesh_Reply(package); //进行应答
       //处理数据
-			char tmp[package->length];
+			char tmp[package->length+1];
 			memcpy(tmp, (char*)package+sizeof(MeshPackage), package->length);
-			tmp[5]='\0';
+			tmp[package->length]='\0';
 			printf("==>Recieved package from node%d, message: %s\n", package->src_addr, tmp);
-			//
-    }
+    //
+		}
     else //发给别人的包
     {
 			printf("Transmit package to node%d\n", package->des_addr);
@@ -256,28 +249,30 @@ int main(void)
   //   RangingInit(SX1280_RADIO_RANGING_ROLE_MASTER,RangingDemoAddress);
   // }
   
-  //HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xfffff,0);
+  HAL_LPTIM_TimeOut_Start_IT(&hlptim1,0xffff,0);
   init_Route();
   LoRaSetRx();
   /* USER CODE END 2 */
 
 	//findRoute_RT(1, 1, 0);
 	
-	MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage)+6);
-	p->type=2;
-	p->length=6;
-  p->des_addr=2;
-	p->hop_addr=2;
-	p->src_addr=My_addr;
-	p->ttl=0;
-	p->ack=0;
-	p->seq=SEQ;
-	p->hops=0;
-	char tmp[6]="hello";
-	memcpy((char*)p+sizeof(MeshPackage), tmp, 6);
-	Mesh_Send(p, (char*)p+sizeof(MeshPackage), p->length);
-  //printf("Send success!:%s-end\n", p);
-  free(p);
+//	MeshPackage* p=(MeshPackage*)malloc(sizeof(MeshPackage)+6);
+//	p->type=2;
+//	p->length=6;
+//  p->des_addr=2;
+//	p->hop_addr=2;
+//	p->src_addr=My_addr;
+//	p->ttl=0;
+//	p->ack=0;
+//	p->seq=SEQ;
+//	p->hops=0;
+//	char tmp[6]="hello";
+//	memcpy((char*)p+sizeof(MeshPackage), tmp, 6);
+//	Mesh_Send(p, (char*)p+sizeof(MeshPackage), p->length);
+//  //printf("Send success!:%s-end\n", p);
+//  free(p);
+
+  Mesh_sendMessage(1, "hello world", 11);
 	
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */

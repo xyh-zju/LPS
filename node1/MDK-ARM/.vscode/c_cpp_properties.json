@@ -2,21 +2,7 @@
     "configurations": [
         {
             "name": "LoRange",
-            "includePath": [
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LoRange\\Core\\Inc",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LoRange\\Drivers\\STM32L4xx_HAL_Driver\\Inc",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LoRange\\Drivers\\STM32L4xx_HAL_Driver\\Inc\\Legacy",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LoRange\\Drivers\\CMSIS\\Device\\ST\\STM32L4xx\\Include",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LoRange\\Drivers\\CMSIS\\Include",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LoRange\\LoRa\\Inc",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LoRange\\LoRa\\Inc\\rangingCorrection",
-                "C:\\Keil_v5\\ARM\\ARMCC\\include",
-                "C:\\Keil_v5\\ARM\\ARMCC\\include\\rw",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LoRange\\MDK-ARM",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LoRange\\Core\\Src",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LoRange\\Drivers\\STM32L4xx_HAL_Driver\\Src",
-                "c:\\Users\\Hayden\\Desktop\\EECS\\SRTP\\Project\\LoRange\\LoRa\\Src"
-            ],
+            "includePath": [],
             "defines": [
                 "USE_HAL_DRIVER",
                 "STM32L476xx",

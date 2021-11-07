@@ -148,19 +148,20 @@ void parse_package(MeshPackage* package){
 		printf("Im node%d, get REPLY form node%d, seq=%d, hop=%d\n",My_addr, package->src_addr, package->seq, package->hop_addr);
     Mesh_Handle_Reply(package); //处理应答
   }
-  else if(package->type==2&&package->hop_addr==My_addr) //转发包
+  else if(package->hop_addr==My_addr) //转发包
   {
 		printf("Im node%d, get TRANSMIT request form node%d to node%d, seq=%d, hop=%d\n",My_addr, package->src_addr, package->des_addr, package->seq, package->hop_addr);
-    if(package->des_addr==My_addr) //收到的是发给自己的包
+    if(package->type==2&&package->des_addr==My_addr) //收到的是发给自己的包
     {
       printf("Get message to me!\n");
       Mesh_Reply(package); //进行应答
       //处理数据
-			char tmp[package->length];
+			char tmp[package->length+1];
 			memcpy(tmp, (char*)package+sizeof(MeshPackage), package->length);
-			tmp[5]='\0';
+			tmp[package->length]='\0';
 			printf("==>Recieved package from node%d, message: %s\n", package->src_addr, tmp);
-    }
+    //
+		}
     else //发给别人的包
     {
 			printf("Transmit package to node%d\n", package->des_addr);

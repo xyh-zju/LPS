@@ -9,19 +9,8 @@ typedef enum
     DEVICE_MODE_RANGING,                                                        
 }DeviceStates_t;
 
-typedef struct WAITING{
-    uint8_t type; //1 for broadcasting find route, 2 for transmit
-    uint8_t resendNumber;
-    uint16_t seq; //包在自己中的序号
-    uint16_t pseq; //包在上一个结点中的序号
-    uint32_t des_addr; //监听某个地址的回复
-    uint32_t require_addr; //发出请求的上家的地址
-    uint8_t* package_stream; //储存待转发内容，包含包头和数据
-    struct WAITING* next;
-} WaitingNode;
-
 typedef struct MESHPACKAGE{
-    uint8_t type; //0 for join, 1 for reply, 2 for hop-transmit, 3 for broadcasting find
+    uint8_t type; //0 for join, 1 for reply, 2 for hop-transmit, 3 for broadcasting find, 4 for failed
     uint8_t ttl;
     uint16_t seq;
     uint16_t ack;
@@ -32,6 +21,15 @@ typedef struct MESHPACKAGE{
     uint32_t length;
     //uint8_t* data;
 } MeshPackage;
+
+typedef struct WAITING{
+    uint8_t resendNumber;
+    uint16_t pseq; //包在上一个结点中的序号
+		uint32_t required_addr;
+    MeshPackage* package;
+		MeshPackage* packageTOsend;
+		struct WAITING* next;
+} WaitingNode;
 
 typedef struct RT_ENTRY{
     uint32_t des_addr;
@@ -53,13 +51,14 @@ uint8_t Mesh_Reply(MeshPackage* package);
 uint8_t Mesh_Handle_Reply(MeshPackage* package);
 uint8_t Mesh_Handle_Broadcast(MeshPackage* package);
 uint8_t Mesh_transmit(MeshPackage* package);
-void findRoute_RT(uint32_t des_addr, uint32_t require_addr, uint16_t hops);
+MeshPackage* findRoute_RT(uint32_t des_addr, uint32_t require_addr, uint16_t hops);
+uint8_t Mesh_sendMessage(uint32_t des_addr, char* message, int length);
 //int Mesh_RouteFound(uint32_t destination);
 //uint8_t Mesh_Construct(uint32_t destination);
 //uint8_t Mesh_RouteMaintenance();
 //uint8_t Mesh_Join();
-void Mesh_Send(MeshPackage* p, char* data, int dataLength);
-
+void Mesh_Send(MeshPackage* package);
+void Resend_Waintinglist();
 
 
 #endif /* __MAIN_H */

@@ -27,24 +27,16 @@ Project File Date:  11/03/2021
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Software\Keil\ARM\ARMCC\Bin'
 Build target 'LPS'
-compiling route.c...
-..\Core\Inc\route.h(49): warning:  #1295-D: Deprecated declaration init_Route - give arg types
+compiling main.c...
+../Core/Inc/route.h(49): warning:  #1295-D: Deprecated declaration init_Route - give arg types
   void init_Route();
-..\Core\Inc\route.h(65): warning:  #1-D: last line of file ends without a newline
+../Core/Inc/route.h(65): warning:  #1-D: last line of file ends without a newline
   #endif /* __MAIN_H */
-..\Core\Src\route.c(198): warning:  #940-D: missing return statement at end of non-void function "Mesh_Reply_Join" 
-  }
-..\Core\Src\route.c(298): warning:  #940-D: missing return statement at end of non-void function "Mesh_Handle_Broadcast" 
-  }
-..\Core\Src\route.c(315): warning:  #940-D: missing return statement at end of non-void function "Mesh_Reply" 
-  }
-..\Core\Src\route.c(334): warning:  #940-D: missing return statement at end of non-void function "Mesh_transmit" 
-  }
-..\Core\Src\route.c: 6 warnings, 0 errors
+../Core/Src/main.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=25420 RO-data=25784 RW-data=272 ZI-data=13160  
+Program Size: Code=25768 RO-data=25780 RW-data=272 ZI-data=13160  
 FromELF: creating hex file...
-".\LPS\LPS.axf" - 0 Error(s), 6 Warning(s).
+".\LPS\LPS.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -68,7 +60,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:04
 </pre>
 </body>
 </html>
